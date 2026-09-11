@@ -26,10 +26,15 @@ Two things to check before this goes anywhere public:
 - **"Mel's Diner"** is rendered in neon across the sign. Mel's Drive-In is a real, trading
   American chain. A generated image carrying a real trademark is worth a look from whoever
   handles that.
-- **"BIGGER DREAMS / A BRIGHTER TOMORROW"** appears on the roadside sign inside the image.
-  It is vague optimism rather than a stated return, and it is part of the photograph rather
-  than a claim the site makes — but on a regulated-adjacent site it is the kind of phrasing
-  worth a second read. Flagging, not objecting.
+- **"THE AMERICAN DREAM / BIGGER · BRIGHTER · TOGETHER"** appears on the roadside sign, and
+  the car's licence plate reads "THE AMERICAN DREAM". It is vague optimism rather than a
+  stated return, and it is part of the photograph rather than a claim the site makes — but
+  on a regulated-adjacent site it is the kind of phrasing worth a second read. Flagging,
+  not objecting.
+
+The file is **2.5:1** (1983×793), which is also the ratio the banner is set to, so it
+displays uncropped. A replacement cut to a different ratio will be cropped by
+`object-cover`; re-cut it to 2.5:1 or change the ratio in `app/page.tsx`.
 
 ### Media thumbnails
 

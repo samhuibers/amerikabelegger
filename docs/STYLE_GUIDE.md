@@ -128,6 +128,11 @@ falls, so a scrim heavy enough to make it legible would have flattened the neon 
 sunset. The plate fixes contrast regardless of what sits behind it and leaves the
 photograph punchy.
 
+The banner is **2.5:1**, matching its image's own ratio so nothing is cropped. It carries
+`min-h-fit` alongside the ratio: on a narrow desktop the plate is taller than a 2.5:1 box,
+and the band grows rather than clipping the quote. Keep that pairing on any fixed-ratio
+box that contains text.
+
 **The 70% is measured, not chosen by eye.** Text over a photograph has to survive the
 photograph's *brightest* region, not its average — the Apollo exhaust plume and the
 skyline's lit windows are exactly where a lighter scrim fails:

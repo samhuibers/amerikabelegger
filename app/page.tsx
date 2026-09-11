@@ -32,7 +32,13 @@ export default function Home() {
 
 function Hero() {
   return (
-    <section className="relative overflow-hidden bg-ink">
+    /*
+     * 2.5:1, matching the banner image's own ratio so it shows uncropped.
+     * `min-h-fit` is the safety net: on a narrow desktop the plate is taller
+     * than a 2.5:1 box, and without it `overflow-hidden` would clip the quote.
+     * The band grows instead of cutting text off.
+     */
+    <section className="relative flex items-center overflow-hidden bg-ink md:aspect-[2.5/1] md:min-h-fit">
       <Image
         src="/images/banner-diner.jpg"
         alt=""
@@ -52,7 +58,7 @@ function Hero() {
        * 14.65:1 regardless of what moves behind it, and lets the image stay
        * punchy. Brass hairline, because it is an engraved plate.
        */}
-      <div className="relative px-6 py-20 md:py-24 lg:px-8">
+      <div className="relative w-full px-6 py-16 md:py-8 lg:px-8">
         <div className="max-w-reading border border-brass bg-ink p-8 lg:p-10">
           <p className="font-display text-display-xl text-paper">
             Never bet against America
