@@ -11,10 +11,25 @@ brand rests on.
 
 | File | Subject | Source | Creator | Licence |
 |---|---|---|---|---|
-| `banner-flag.jpg` | American flag, warm retro tones | [Flickr](https://www.flickr.com/photos/59509714@N06/21779611031) | asarstudios | Public Domain Mark 1.0 |
 | `giants-skyline.jpg` | Manhattan at night from the Empire State Building | [Flickr](https://www.flickr.com/photos/130478877@N02/23347480891) | jody.claborn | Public Domain Mark 1.0 |
 | `growers-farmland.jpg` | Tractor before a cornfield | [Flickr](https://www.flickr.com/photos/41284017@N08/54674663490) | USDAgov | Public Domain Mark 1.0 |
 | `moonshots-apollo.jpg` | Apollo 11 Saturn V liftoff, 16 July 1969 | [NASA image library](https://images.nasa.gov/details/S69-39961) | NASA (S69-39961) | Public domain (NASA) |
+
+### Banner
+
+`banner-diner.jpg` was **supplied by the client**, not sourced here, so its provenance and
+licensing sit with them rather than in this table. It appears to be generated rather than
+photographed.
+
+Two things to check before this goes anywhere public:
+
+- **"Mel's Diner"** is rendered in neon across the sign. Mel's Drive-In is a real, trading
+  American chain. A generated image carrying a real trademark is worth a look from whoever
+  handles that.
+- **"BIGGER DREAMS / A BRIGHTER TOMORROW"** appears on the roadside sign inside the image.
+  It is vague optimism rather than a stated return, and it is part of the photograph rather
+  than a claim the site makes — but on a regulated-adjacent site it is the kind of phrasing
+  worth a second read. Flagging, not objecting.
 
 ### Media thumbnails
 

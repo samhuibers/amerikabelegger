@@ -34,33 +34,35 @@ function Hero() {
   return (
     <section className="relative overflow-hidden bg-ink">
       <Image
-        src="/images/banner-flag.jpg"
+        src="/images/banner-diner.jpg"
         alt=""
         fill
         priority
         sizes="100vw"
         className="photo object-cover"
       />
-      <div className="photo-scrim absolute inset-0" aria-hidden />
-      <div className="absolute inset-0 text-brass opacity-[0.07]" aria-hidden>
-        <Guilloche height={280} amplitude={40} lines={16} className="h-full" />
-      </div>
+      {/* Light, decorative only — the plate below carries the contrast. */}
+      <div className="photo-scrim-soft absolute inset-0" aria-hidden />
 
-      {/* The brand line gets one appearance on the whole site. This is it. */}
       {/*
-       * Aligned to the page gutter rather than centred in a 1240px column, so
-       * the banner, the categories and the media all share one left edge. The
-       * subline keeps max-w-reading so the measure stays 62-68 characters.
+       * The quote sits on a solid ink plate rather than straight on the
+       * photograph. The photograph's brightest area is the neon sign, exactly
+       * where this text falls, so a scrim heavy enough to make it legible would
+       * have flattened the neon and the sunset. The plate fixes contrast at
+       * 14.65:1 regardless of what moves behind it, and lets the image stay
+       * punchy. Brass hairline, because it is an engraved plate.
        */}
       <div className="relative px-6 py-20 md:py-24 lg:px-8">
-        <p className="font-display text-display-xl text-paper">
-          Never bet against America
-        </p>
-        <p className="mt-4 text-body-s text-brass">Warren Buffett</p>
-        <p className="mt-6 max-w-reading text-body-l text-paper">
-          Wij lezen wat Amerikaanse beleggers publiceren, wegen het, en ordenen
-          het in drie categorieën.
-        </p>
+        <div className="max-w-reading border border-brass bg-ink p-8 lg:p-10">
+          <p className="font-display text-display-xl text-paper">
+            Never bet against America
+          </p>
+          <p className="mt-4 text-body-s text-brass">Warren Buffett</p>
+          <p className="mt-6 text-body-l text-paper">
+            Wij lezen wat Amerikaanse beleggers publiceren, wegen het, en
+            ordenen het in drie categorieën.
+          </p>
+        </div>
       </div>
     </section>
   );

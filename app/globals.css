@@ -95,6 +95,15 @@
     background-color: color-mix(in srgb, var(--color-ink) 70%, transparent);
   }
 
+  /*
+   * The banner's scrim. Light on purpose: the quote there sits on a solid ink
+   * plate, so this carries no contrast duty and exists only to seat the
+   * photograph in the navy palette. Never put text straight onto this one.
+   */
+  .photo-scrim-soft {
+    background-color: color-mix(in srgb, var(--color-ink) 25%, transparent);
+  }
+
   /* Tabular figures for every table, price and figure. */
   .tabular {
     font-feature-settings: "tnum" 1;

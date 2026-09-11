@@ -106,11 +106,27 @@ and the seal. Borders are 1px brass on ink, `border-ink/15` on paper.
 Photographs appear on the **homepage only** — the banner behind the brand line and one
 behind each category column. Sources and licensing: [IMAGE-CREDITS.md](IMAGE-CREDITS.md).
 
-Two classes in `globals.css` do all the work:
+Three classes in `globals.css` do all the work:
 
 - `.photo` — `saturate(1.15)`. The one knob to turn if the images feel too muted or too
   loud. Colour is wanted: these are not black-and-white photographs.
-- `.photo-scrim` — a **flat** 70% ink fill. Never a gradient; the gradient ban still holds.
+- `.photo-scrim` — a **flat** 70% ink fill, for photographs with text directly on them.
+  Never a gradient; the gradient ban still holds.
+- `.photo-scrim-soft` — a flat **25%** fill, used only on the banner. It carries no contrast
+  duty, because the banner's quote sits on a solid ink plate rather than on the photograph.
+  **Never put text straight onto this one.**
+
+**Two ways to keep text legible over a photograph.** Scrim it, or plate it:
+
+| | When | Contrast |
+|---|---|---|
+| Scrim (`.photo-scrim`) | Text directly on the image, as on the category cards | 5.44:1 worst case |
+| Plate (solid `bg-ink` + brass hairline) | The image is too bright or too loved to mute — the banner | 14.65:1 always |
+
+The banner earns the plate: its brightest area is the neon sign, exactly where the quote
+falls, so a scrim heavy enough to make it legible would have flattened the neon and the
+sunset. The plate fixes contrast regardless of what sits behind it and leaves the
+photograph punchy.
 
 **The 70% is measured, not chosen by eye.** Text over a photograph has to survive the
 photograph's *brightest* region, not its average — the Apollo exhaust plume and the
