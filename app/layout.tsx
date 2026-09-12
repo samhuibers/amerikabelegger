@@ -32,6 +32,9 @@ export const metadata: Metadata = {
   title: "De Amerikabelegger",
   description:
     "Wij verzamelen en ordenen wat Amerikaanse beleggers publiceren over Amerikaanse aandelen.",
+  icons: {
+    icon: "/images/favicon.svg",
+  },
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
