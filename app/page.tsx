@@ -145,7 +145,7 @@ function Media() {
         </p>
       </div>
 
-      <ul className="grid gap-4 px-6 pb-10 sm:grid-cols-2 sm:gap-5 lg:grid-cols-4 lg:px-8">
+      <ul className="grid gap-4 px-6 sm:grid-cols-2 sm:gap-5 lg:grid-cols-4 lg:px-8">
         {media.map((item) => (
           <li key={item.title}>
             <a
