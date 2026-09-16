@@ -57,17 +57,17 @@ function Hero() {
        * have flattened the neon and the sunset. The plate fixes contrast at
        * 14.65:1 regardless of what moves behind it, and lets the image stay
        * punchy. Brass hairline, because it is an engraved plate.
+       *
+       * Kept small on purpose: this is a caption on the photo, not the page's
+       * headline — the banner is the visual, so the plate must not compete
+       * with it.
        */}
-      <div className="relative w-full px-6 py-16 md:py-8 lg:px-8">
-        <div className="max-w-reading border border-brass bg-ink p-8 lg:p-10">
-          <p className="font-display text-display-xl text-paper">
-            Never bet against America
+      <div className="relative w-full px-6 py-6 md:py-5 lg:px-8">
+        <div className="max-w-fit border border-brass bg-ink px-5 py-4">
+          <p className="font-display text-display-s text-paper">
+            Never bet against America&copy;
           </p>
-          <p className="mt-4 text-body-s text-brass">Warren Buffett</p>
-          <p className="mt-6 text-body-l text-paper">
-            Wij lezen wat Amerikaanse beleggers publiceren, wegen het, en
-            ordenen het in drie categorieën.
-          </p>
+          <p className="mt-1 text-body-s text-brass">Warren Buffett</p>
         </div>
       </div>
     </section>
