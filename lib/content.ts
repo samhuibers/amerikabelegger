@@ -30,7 +30,7 @@ export const categories: {
   {
     slug: "growers",
     label: "Growers",
-    description: "Compounders en mid-caps met een echt bedrijf eronder.",
+    description: "De toekomstige Giants. Bedrijven die snel groeien en dominant worden.",
     image: "/images/growers-farmland.jpg",
     imageAlt: "Een tractor voor een maisveld onder een bewolkte hemel",
   },
@@ -55,18 +55,27 @@ export const tickerRows = [
   { symbol: "META", price: 738.52, change: 0.95 },
 ];
 
+/** The platforms a source can post on. Drives which icon a card shows. */
+export type Platform = "X" | "YouTube" | "TikTok" | "Substack" | "Instagram";
+
 /*
  * Hardcoded media placeholders. Roles rather than real names, and invented
  * titles: attaching a fabricated headline to a real creator would misrepresent
- * them. `href` is "#" until the real links exist.
- *
- * Platform is named in text, never as a coloured logo chip. `cta` is the label
- * revealed over the thumbnail on hover and on keyboard focus.
+ * them. `href` is "#" until the real links exist. The platform is shown as an
+ * icon on the card.
  */
-export const media = [
+export const media: {
+  platform: Platform;
+  kind: string;
+  title: string;
+  source: string;
+  date: Date;
+  image: string;
+  imageAlt: string;
+  href: string;
+}[] = [
   {
     platform: "YouTube",
-    cta: "Afspelen op YouTube",
     kind: "Video",
     title: "Waarom de grootste namen de index blijven dragen",
     source: "Macro-commentator",
@@ -77,7 +86,6 @@ export const media = [
   },
   {
     platform: "TikTok",
-    cta: "Afspelen op TikTok",
     kind: "Video",
     title: "Drie vragen die je stelt voor je een small cap koopt",
     source: "Small-cap jager",
@@ -88,7 +96,6 @@ export const media = [
   },
   {
     platform: "X",
-    cta: "Ga naar de thread op X",
     kind: "Draad",
     title: "Wat de cijfers van dit kwartaal wel en niet zeggen",
     source: "Halfgeleider-analist",
@@ -99,7 +106,6 @@ export const media = [
   },
   {
     platform: "Substack",
-    cta: "Lees op Substack",
     kind: "Nieuwsbrief",
     title: "De week waarin iedereen het over marges had",
     source: "Waardebelegger",

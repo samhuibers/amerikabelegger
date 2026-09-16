@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Cartouche } from "@/components/cartouche";
 import { Guilloche } from "@/components/guilloche";
+import { PlatformIcon } from "@/components/platform-icon";
 import { categories, media, type CategorySlug } from "@/lib/content";
 import { formatDate } from "@/lib/format";
 
@@ -34,11 +35,12 @@ function Hero() {
   return (
     /*
      * 2.5:1, matching the banner image's own ratio so it shows uncropped.
-     * `min-h-fit` is the safety net: on a narrow desktop the plate is taller
-     * than a 2.5:1 box, and without it `overflow-hidden` would clip the quote.
-     * The band grows instead of cutting text off.
+     * The plate is an absolutely positioned overlay now, not flow content —
+     * `min-h-[220px]` is the mobile floor that used to come from the plate's
+     * own padding, kept so the banner has a sensible height once the plate
+     * is lifted out of flow.
      */
-    <section className="relative flex items-center overflow-hidden bg-ink md:aspect-[2.5/1] md:min-h-fit">
+    <section className="relative min-h-[220px] overflow-hidden bg-ink md:aspect-[2.5/1]">
       <Image
         src="/images/banner-diner.jpg"
         alt=""
@@ -58,12 +60,12 @@ function Hero() {
        * 14.65:1 regardless of what moves behind it, and lets the image stay
        * punchy. Brass hairline, because it is an engraved plate.
        *
-       * Kept small on purpose: this is a caption on the photo, not the page's
-       * headline — the banner is the visual, so the plate must not compete
-       * with it.
+       * Kept small and pinned to a corner on purpose: this is a caption on
+       * the photo, not the page's headline — the banner is the visual, so
+       * the plate must not compete with it or sit across its center.
        */}
-      <div className="relative w-full px-6 py-6 md:py-5 lg:px-8">
-        <div className="max-w-fit border border-brass bg-ink px-5 py-4">
+      <div className="absolute inset-x-0 bottom-0 px-6 py-6 lg:px-8 lg:py-8">
+        <div className="max-w-xs border border-brass bg-ink px-5 py-4 sm:max-w-fit">
           <p className="font-display text-display-s text-paper">
             Never bet against America&copy;
           </p>
@@ -124,93 +126,71 @@ function Categories() {
 }
 
 /*
- * Full-bleed to match the banner and the categories, and pulled up close to
- * them. The thumbnail is the link target; the affordance over it names what
- * clicking actually does, which differs per platform.
+ * A streaming-gallery card: thumbnail and attribution fused into one rounded
+ * unit, tight gaps between cards, and a lift-and-border on hover rather than
+ * a darkened overlay — the card itself is the affordance, so it needs no
+ * button naming the click.
  */
 function Media() {
   return (
     <section aria-label="Media" className="border-t border-brass">
       <div className="px-6 pt-10 pb-6 lg:px-8">
-        <h2 className="font-display text-display-m">Wat wij deze week zagen</h2>
+        <h2 className="font-display text-display-m">
+          Topbeleggers en influencers. Wat is hún nieuws deze week?
+        </h2>
         <div className="scotch-rule mt-4 max-w-reading" />
         <p className="mt-4 max-w-reading text-body-s text-ink-soft">
-          Bij elke uitspraak staat wie het zei, op welk platform, en wanneer.
+          Wie zegt wat? Op welk platform? De Amerikabelegger deelt de
+          opvallendste updates.
         </p>
       </div>
 
-      <ul className="grid border-t border-brass sm:grid-cols-2 lg:grid-cols-4">
-        {media.map((item) => {
-          const isVideo = item.kind === "Video";
-          return (
-            <li
-              key={item.title}
-              className="border-b border-brass last:border-b-0 sm:border-r sm:last:border-r-0"
+      <ul className="grid gap-4 px-6 pb-10 sm:grid-cols-2 sm:gap-5 lg:grid-cols-4 lg:px-8">
+        {media.map((item) => (
+          <li key={item.title}>
+            <a
+              href={item.href}
+              className="group block origin-center overflow-hidden rounded-lg border border-transparent bg-paper transition duration-200 ease-out hover:z-10 hover:scale-[1.04] hover:border-brass hover:shadow-lg focus-visible:z-10 focus-visible:scale-[1.04] focus-visible:border-brass focus-visible:shadow-lg"
             >
-              <a href={item.href} className="group block h-full p-6 lg:p-8">
-                <div className="relative aspect-[4/3] bg-ink">
-                  {/*
-                   * Decorative: these are generic placeholders, not stills from
-                   * the linked post, so describing them would misdescribe the
-                   * link. The heading below carries its name. Give real stills a
-                   * real alt (item.imageAlt) when they replace these.
-                   */}
-                  <Image
-                    src={item.image}
-                    alt=""
-                    fill
-                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-                    className="photo object-cover"
-                  />
+              <div className="relative aspect-[4/3] bg-ink">
+                {/*
+                 * Decorative: these are generic placeholders, not stills from
+                 * the linked post, so describing them would misdescribe the
+                 * link. The heading below carries its name. Give real stills a
+                 * real alt (item.imageAlt) when they replace these.
+                 */}
+                <Image
+                  src={item.image}
+                  alt=""
+                  fill
+                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                  className="photo object-cover"
+                />
 
-                  {/*
-                   * Always visible, so a video reads as a video without hovering
-                   * — touch devices never get a hover state. Solid ink behind it
-                   * because the photograph underneath is unscrimmed and may be
-                   * bright.
-                   */}
-                  {isVideo && (
-                    <span
-                      className="absolute bottom-0 left-0 bg-ink px-3 py-2 text-body-s text-paper"
-                      aria-hidden
-                    >
-                      ▶
-                    </span>
-                  )}
+                {/* Always visible, so the source platform reads without hovering. */}
+                <span
+                  className="absolute top-0 left-0 flex items-center bg-ink p-2 text-paper"
+                  aria-hidden
+                >
+                  <PlatformIcon platform={item.platform} className="h-4 w-4" />
+                </span>
+              </div>
 
-                  {/*
-                   * Revealed on hover and on keyboard focus. Opacity and colour
-                   * only — no lift, no scale. The scrim is the same measured 70%
-                   * that keeps paper text legible over any part of a photograph.
-                   */}
-                  <span
-                    className="photo-scrim absolute inset-0 flex items-center justify-center p-3 opacity-0 transition-opacity duration-150 group-hover:opacity-100 group-focus-visible:opacity-100"
-                    aria-hidden
-                  >
-                    <span className="border border-paper px-4 py-2 text-center text-body-s font-medium text-paper">
-                      {item.cta}
-                    </span>
-                  </span>
-                </div>
-
-                <h3 className="mt-4 text-body font-medium group-hover:underline">
+              <div className="p-4">
+                <h3 className="text-body font-medium group-hover:underline">
                   {item.title}
                 </h3>
 
-                {/*
-                 * The attribution block: who said it, where, when. Platform is
-                 * named in text rather than shown as a coloured logo chip.
-                 */}
-                <p className="mt-2 text-body-s text-ink-soft">
+                <p className="mt-1 text-body-s text-ink-soft">
                   {item.source} op {item.platform},{" "}
                   <time dateTime={item.date.toISOString().slice(0, 10)}>
                     {formatDate(item.date)}
                   </time>
                 </p>
-              </a>
-            </li>
-          );
-        })}
+              </div>
+            </a>
+          </li>
+        ))}
       </ul>
     </section>
   );
