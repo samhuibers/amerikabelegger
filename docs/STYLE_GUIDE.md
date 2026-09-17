@@ -82,6 +82,18 @@ Rules: Bodoni never below 24px. Sentence case everywhere, including nav and butt
 all-caps is for ticker symbols only. No tracked-out eyebrow labels above headings. Measure
 62–68 characters (`max-w-reading`). `.tabular` on every table, price and figure.
 
+### Libre Franklin stays — and what would replace it
+
+The three faces were formally re-evaluated in September 2026 and **Libre Franklin was
+kept**. If it is ever questioned again, the vetted substitute is **Archivo**: a grotesque
+drawn for small sizes, with a narrower set width that buys back a line in the 256px media
+tile captions and gives the figures more spine in a table. The other two finalists were
+**Public Sans** (a redraw of Libre Franklin itself, the conservative pick) and **IBM Plex
+Sans** (pairs by design with the Plex Mono already in the ticker).
+
+Bodoni Moda is settled and is not up for discussion. Don't introduce a face that wasn't on
+that shortlist without running a fresh specimen first.
+
 ### Geometry
 
 4px base (Tailwind's default scale). `max-w-content` 1240px, `max-w-reading` 680px.
@@ -158,6 +170,22 @@ Rules for any image that replaces these:
 One orchestrated moment: the ticker. Everything else is static — no scroll animation, no
 hover lift. Hover changes colour or underline only. `prefers-reduced-motion` halts the
 ticker and leaves a readable static row.
+
+## Sanctioned deviation — the homepage filmstrip
+
+The "Topbeleggers en influencers" rail breaks three rules above on purpose, by decision
+of the owner: its tiles are `rounded-lg`, they scale to 1.2 on hover, and they sit in a
+horizontally scrolling rail rather than a divided band. The scale is wrapped in
+`motion-safe:`, so a reduced-motion visitor still gets only the brass outline.
+
+Their caption uses the **plate**, not the scrim — solid `ink-soft` with a brass hairline,
+at 10.53:1 — because a translucent layer over the photograph was the thing being fixed.
+Don't restore the scrim or the square corners here.
+
+Hovering a tile dims the image (`.photo-dim`, a measured 60%) and reveals the platform mark
+in `paper`, the same colour for every platform. There is no permanent platform chip: the
+thumbnails are mock-ups of the posts themselves, so each one already shows whose interface
+it is. The mark is an affordance, not a label.
 
 ---
 

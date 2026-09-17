@@ -126,67 +126,112 @@ function Categories() {
 }
 
 /*
- * A streaming-gallery card: thumbnail and attribution fused into one rounded
- * unit, tight gaps between cards, and a lift-and-border on hover rather than
- * a darkened overlay — the card itself is the affordance, so it needs no
- * button naming the click.
+ * A filmstrip on the ink plate. The rail is wider than the viewport on purpose
+ * — the tile cut off at the right edge is the whole affordance, so there are no
+ * arrow buttons and no client JS. Tiles are portrait: a cover, not a thumbnail
+ * stacked above a byline.
+ *
+ * `pl-6` without a matching `pr` is deliberate. Padding on the right would
+ * park the last tile neatly inside the gutter and the row would read as a grid
+ * that happens to scroll.
  */
 function Media() {
   return (
-    <section aria-label="Media" className="border-t border-brass">
-      <div className="px-6 pt-10 pb-6 lg:px-8">
-        <h2 className="font-display text-display-m">
-          Topbeleggers en influencers. Wat is hún nieuws deze week?
-        </h2>
-        <div className="scotch-rule mt-4 max-w-reading" />
-        <p className="mt-4 max-w-reading text-body-s text-ink-soft">
-          Wie zegt wat? Op welk platform? De Amerikabelegger deelt de
-          opvallendste updates.
-        </p>
+    <section aria-label="Media" className="border-t border-brass bg-ink text-paper">
+      <div className="flex flex-wrap items-end justify-between gap-x-8 gap-y-4 px-6 pt-10 pb-1 lg:px-8">
+        <div>
+          <h2 className="font-display text-display-m">
+            Topbeleggers en influencers. Wat is hún nieuws deze week?
+          </h2>
+          <div className="scotch-rule mt-4 max-w-reading" />
+          <p className="mt-4 max-w-reading text-body-s">
+            Wie zegt wat? Op welk platform? De Amerikabelegger deelt de
+            opvallendste updates.
+          </p>
+        </div>
+
+        {/* The count is the second overflow cue, for anyone who never scrolls. */}
+        <p className="tabular text-body-s text-brass">{media.length} updates</p>
       </div>
 
-      <ul className="grid gap-4 px-6 sm:grid-cols-2 sm:gap-5 lg:grid-cols-4 lg:px-8">
+      {/*
+       * `py-11` is not spacing, it is headroom. A scroll container clips at its
+       * padding box, so a tile growing to 1.2x needs (scale - 1) / 2 * height
+       * — 38.4px at this tile size — or it gets cut off at the band edges.
+       * The same padding keeps the focus ring, drawn 2px outside, unclipped.
+       *
+       * `scroll-pl-*` has to match `pl-*`. Snapping measures from the snapport,
+       * which ignores padding unless scroll-padding says otherwise — without it
+       * the browser snaps tile one flush to the viewport edge on load and eats
+       * the gutter.
+       */}
+      <ul className="rail flex snap-x snap-mandatory gap-3 overflow-x-auto py-11 pl-6 scroll-pl-6 lg:pl-8 lg:scroll-pl-8">
         {media.map((item) => (
-          <li key={item.title}>
+          <li key={item.title} className="w-56 shrink-0 snap-start sm:w-64">
             <a
               href={item.href}
-              className="group block origin-center overflow-hidden rounded-lg border border-transparent bg-paper transition duration-200 ease-out hover:z-10 hover:scale-[1.04] hover:border-brass hover:shadow-lg focus-visible:z-10 focus-visible:scale-[1.04] focus-visible:border-brass focus-visible:shadow-lg"
+              className="group relative block aspect-[2/3] overflow-hidden rounded-lg bg-ink transition duration-300 ease-out hover:z-10 hover:outline-1 hover:-outline-offset-1 hover:outline-brass focus-visible:z-10 motion-safe:hover:scale-[1.2] motion-safe:focus-visible:scale-[1.2]"
             >
-              <div className="relative aspect-[4/3] bg-ink">
-                {/*
-                 * Decorative: these are generic placeholders, not stills from
-                 * the linked post, so describing them would misdescribe the
-                 * link. The heading below carries its name. Give real stills a
-                 * real alt (item.imageAlt) when they replace these.
-                 */}
-                <Image
-                  src={item.image}
-                  alt=""
-                  fill
-                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-                  className="photo object-cover"
-                />
+              {/*
+               * Decorative on purpose: the image is a mock-up of the post and
+               * the caption beside it already names the post, the source and
+               * the date, so a real alt would only repeat it. `item.imageAlt`
+               * describes each file and is ready if that ever stops being true.
+               */}
+              <Image
+                src={item.image}
+                alt=""
+                fill
+                sizes="(max-width: 640px) 224px, 256px"
+                className="photo object-cover"
+              />
 
-                {/* Always visible, so the source platform reads without hovering. */}
-                <span
-                  className="absolute top-0 left-0 flex items-center bg-ink p-2 text-paper"
-                  aria-hidden
-                >
-                  <PlatformIcon platform={item.platform} className="h-4 w-4" />
-                </span>
-              </div>
+              {/*
+               * The hover affordance. The thumbnail is a mock-up of the post
+               * itself, so it already announces its platform far better than a
+               * permanent chip did — the mark only needs to appear at the point
+               * the tile becomes clickable.
+               *
+               * Paper for every platform rather than each brand's own colour:
+               * this says "the post lives over there", it is not a logo wall.
+               *
+               * Placed before the plate so the plate paints over it and stays
+               * undimmed, and `pb-28` lifts the mark into the part of the image
+               * the plate doesn't cover.
+               */}
+              <span
+                className="photo-dim absolute inset-0 flex items-center justify-center pb-28 text-paper opacity-0 transition-opacity duration-300 group-hover:opacity-100 group-focus-visible:opacity-100"
+                aria-hidden
+              >
+                <PlatformIcon platform={item.platform} className="h-12 w-12" />
+              </span>
 
-              <div className="p-4">
-                <h3 className="text-body font-medium group-hover:underline">
+              {/*
+               * A plate, not a scrim: solid ink-soft under the text rather than
+               * a translucent layer over the photograph. Fixes contrast at
+               * 10.53:1 whatever the image does behind it, where the 70% scrim
+               * could only promise 5.44:1. Brass hairline because it is an
+               * engraved plate — the same device as the banner's quote.
+               *
+               * ink-soft rather than ink: the band behind is already ink, so an
+               * ink plate would hide the tile's lower corners and the radius
+               * would only read at the top.
+               */}
+              <div className="absolute inset-x-0 bottom-0 border-t border-brass bg-ink-soft p-3">
+                <h3 className="text-body leading-snug font-medium group-hover:underline">
                   {item.title}
                 </h3>
 
-                <p className="mt-1 text-body-s text-ink-soft">
-                  {item.source} op {item.platform},{" "}
-                  <time dateTime={item.date.toISOString().slice(0, 10)}>
-                    {formatDate(item.date)}
-                  </time>
+                {/* Who, on which platform, when — named in text, not by icon alone. */}
+                <p className="mt-1.5 text-body-s leading-snug">
+                  {item.source} op {item.platform}
                 </p>
+                <time
+                  dateTime={item.date.toISOString().slice(0, 10)}
+                  className="tabular block text-micro"
+                >
+                  {formatDate(item.date)}
+                </time>
               </div>
             </a>
           </li>

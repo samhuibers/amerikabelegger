@@ -104,9 +104,29 @@
     background-color: color-mix(in srgb, var(--color-ink) 25%, transparent);
   }
 
+  /*
+   * The hover dim on a media tile, carrying a paper-coloured platform mark and
+   * nothing else. 60% is measured against the worst case in the set: several
+   * post mock-ups are near-white, and paper on a 60% dim over white holds
+   * 3.88:1 — clear of the 3:1 WCAG asks of a non-text control. At 50% it drops
+   * to 2.84:1 and the mark starts to disappear on the white ones.
+   *
+   * Lighter than `.photo-scrim` because it only has to carry an icon; text
+   * still belongs on the scrim or on a plate.
+   */
+  .photo-dim {
+    background-color: color-mix(in srgb, var(--color-ink) 60%, transparent);
+  }
+
   /* Tabular figures for every table, price and figure. */
   .tabular {
     font-feature-settings: "tnum" 1;
+  }
+
+  /* The filmstrip's scroll container. Only the scrollbar — layout is Tailwind. */
+  .rail {
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-brass) transparent;
   }
 
   /* The site's one orchestrated motion, halted below for reduced motion. */

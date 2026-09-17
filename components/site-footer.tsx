@@ -7,12 +7,18 @@ import { categories, disclaimer, navigation, positioning } from "@/lib/content";
  * The disclaimer sits on ledger rather than inside the ink footer so it stays
  * genuinely readable (14.31:1) instead of being tucked away in low-contrast
  * text — it is meant to be read, not hidden.
+ *
+ * No top margin. The air before the disclaimer is `pt-16` inside the ledger
+ * band, not a margin outside it: a margin renders as a strip of paper, which
+ * on the homepage put an unfinished seam between the ink filmstrip and this
+ * band. As padding, the same air arrives as ledger and every page's last
+ * section meets the footer directly.
  */
 export function SiteFooter() {
   return (
-    <footer className="mt-24">
+    <footer>
       <div className="bg-ledger">
-        <div className="mx-auto max-w-content px-6 py-8">
+        <div className="mx-auto max-w-content px-6 pt-16 pb-10">
           <p className="max-w-reading text-body-s text-ink">{positioning}</p>
           <p className="mt-3 max-w-reading text-micro text-ink-soft">
             {disclaimer}

@@ -38,16 +38,30 @@ displays uncropped. A replacement cut to a different ratio will be cropped by
 
 ### Media thumbnails
 
-Deliberately object-and-scene photographs with **no identifiable faces**. The media cards
-carry invented titles, and pairing a fabricated headline with a real person's face would
-misrepresent them — the same reason the source names are roles rather than real creators.
+**Not photographs. Drawn, not sourced.** The eight `post-*.jpg` files are mock-ups of
+social posts, rendered from [`tools/post-mockups/posts.html`](../tools/post-mockups/posts.html)
+and screenshotted — so there is no third party in them and nothing to license. Edit that
+file and run `node tools/post-mockups/render.mjs` to regenerate the set.
 
-| File | Subject | Source | Creator | Licence |
-|---|---|---|---|---|
-| `media-youtube.jpg` | Vintage cameras on a table | [Flickr](https://www.flickr.com/photos/135371437@N04/21698523515) | StockyPics | CC0 1.0 |
-| `media-tiktok.jpg` | A smartphone held over grass | [Flickr](https://www.flickr.com/photos/151198978@N08/31572507974) | CCØBAY | CC0 1.0 |
-| `media-x.jpg` | Laptop and monitor on a dark desk | [Flickr](https://www.flickr.com/photos/125167502@N02/46206050671) | markus spiske | CC0 1.0 |
-| `media-substack.jpg` | A turquoise typewriter | [Flickr](https://www.flickr.com/photos/151415985@N06/37410363846) | Wallboat | CC0 1.0 |
+Every account in them is invented (`@chipcheck`, `Macro Daily`, `The Value Letter`, and so
+on) and no image contains a face. They imitate each platform's interface closely enough to
+read as real at thumbnail size, which is the point — they exist so partners can see what
+the product looks like with real-world content in it.
+
+| File | Platform | Invented account |
+|---|---|---|
+| `post-youtube-index.jpg` | YouTube video page | Macro Daily |
+| `post-tiktok-smallcap.jpg` | TikTok video | @smallcaphunter |
+| `post-x-chips.jpg` | X thread | @chipcheck |
+| `post-substack-margins.jpg` | Substack post | The Value Letter |
+| `post-instagram-warning.jpg` | Instagram carousel | @investingcoach |
+| `post-x-rates.jpg` | X thread | @bonddesk |
+| `post-youtube-revisions.jpg` | YouTube video page | Sector Watch |
+| `post-instagram-week.jpg` | Instagram carousel | @marketnotes |
+
+**Before anything goes public**, these need replacing with real, cleared screenshots or
+licensed art. Mock interfaces carrying another company's trade dress are fine for an
+internal pitch and are not fine on a live regulated-adjacent site.
 
 ## One image deliberately rejected
 
