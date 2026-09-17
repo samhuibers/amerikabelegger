@@ -164,3 +164,81 @@ export const positioning =
 export const disclaimer =
   "Niets op deze site is beleggingsadvies. Wij geven meningen van derden weer, " +
   "voorzien van bron en datum. Beleggen brengt risico's met zich mee; je kunt je inleg verliezen.";
+
+/*
+ * The three working principles, for /over-ons. Three is the whole list — they
+ * are the promises the site is judged on, not a values wall. The first one is
+ * the rule that outranks the rest in docs/STYLE_GUIDE.md, stated in public.
+ */
+export const principles = [
+  {
+    title: "De bron staat erbij",
+    body:
+      "Elke uitspraak hier is van iemand anders, en die iemand staat erbij: naam, " +
+      "platform, datum. Zonder bron plaatsen we het niet.",
+  },
+  {
+    title: "Ordenen is het werk",
+    body:
+      "Aan Amerikaanse marktcommentaar is geen gebrek. Wij selecteren en wegen wat " +
+      "het volgen waard is en brengen het terug tot drie categorieën.",
+  },
+  {
+    title: "Een mening is geen onderzoek",
+    body:
+      "Waar wij zelf iets vinden, staat Redactie erboven en ziet het er anders uit " +
+      "dan alles wat wij citeren. Eigen onderzoek doen wij niet.",
+  },
+];
+
+/*
+ * The four people behind the site, oldest hand first.
+ *
+ * Bios are drawn from public sources and stay factual: a role line and two
+ * sentences is the entire format. No portraits — photography is homepage-only
+ * (docs/STYLE_GUIDE.md), and a row of headshots would be the fifth ornament.
+ */
+export const team: {
+  name: string;
+  role: string;
+  bio: string;
+  href: string;
+}[] = [
+  {
+    name: "Aart Lensink",
+    role: "Merk en positionering",
+    bio:
+      "Richtte contentmarketingbureau LVB op en leidde het 27 jaar, daarna managing " +
+      "director van iO Campus Utrecht. Contentmarketeer van het Jaar 2018, auteur van " +
+      "twee boeken over het vak, en inmiddels zelfstandig merkadviseur voor de " +
+      "financiële sector.",
+    href: "https://www.linkedin.com/in/aart-lensink-992192/",
+  },
+  {
+    name: "Coen Huibers",
+    role: "Redactie en productie",
+    bio:
+      "Partner bij LVB, sinds de overname onderdeel van iO. Bouwde daar aan video, " +
+      "brand publishing en geïntegreerde merkcampagnes — het maakwerk waar deze site " +
+      "dagelijks op draait.",
+    href: "https://www.linkedin.com/in/coenhuibers/",
+  },
+  {
+    name: "Daniël Lensink",
+    role: "AI en distributie",
+    bio:
+      "AI-native contentmarketeer, werkzaam bij hypotheekverstrekker Frits. Houdt " +
+      "bij wat er te halen valt uit nieuwe tooling en waar het handwerk moet blijven.",
+    href: "https://www.linkedin.com/in/daniel-lensink/",
+  },
+  {
+    // PLACEHOLDER — nothing verifiable about this Sam Huibers is public, so this
+    // bio is invented scaffolding. Replace before the page goes live.
+    name: "Sam Huibers",
+    role: "Techniek en vormgeving",
+    bio:
+      "Bouwt en onderhoudt De Amerikabelegger: de site, de vormgeving en de manier " +
+      "waarop het archief wordt opgeslagen.",
+    href: "https://www.linkedin.com/in/sam-huibers/",
+  },
+];

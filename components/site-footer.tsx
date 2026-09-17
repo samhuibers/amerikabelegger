@@ -27,7 +27,7 @@ export function SiteFooter() {
       </div>
 
       <div className="bg-ink">
-        <div className="mx-auto flex max-w-content flex-col gap-8 px-6 py-12 sm:flex-row sm:gap-16">
+        <div className="mx-auto flex max-w-content flex-col gap-8 px-6 py-12 sm:flex-row sm:items-baseline sm:gap-16">
           <FooterColumn title="Rubrieken" links={navigation} />
           <FooterColumn
             title="Categorieën"
@@ -36,6 +36,19 @@ export function SiteFooter() {
               href: `/${c.slug}`,
             }))}
           />
+
+          {/*
+           * The wordmark signs the page off. Plain text, not a second link
+           * home — the header's wordmark already is one, and the column
+           * beside this one already lists every destination.
+           *
+           * `sm:items-baseline` on the row sits it on the same baseline as the
+           * two column headings, so the name reads as the third element of the
+           * row rather than as a block floated to the right.
+           */}
+          <p className="font-display text-display-s text-paper sm:ml-auto">
+            De Amerikabelegger
+          </p>
         </div>
       </div>
     </footer>
