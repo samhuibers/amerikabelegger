@@ -9,7 +9,7 @@ import { formatDate } from "@/lib/format";
 /*
  * Photographs sit under a flat 70% ink scrim (`.photo-scrim`), never a gradient.
  * 70% is measured, not guessed: it keeps paper text at 5.44:1 even over a pure
- * white highlight — the Apollo exhaust plume and the skyline's lit windows are
+ * white highlight — the Artemis exhaust plume and the skyline's lit windows are
  * exactly the places a lighter scrim fails. See docs/STYLE_GUIDE.md.
  */
 

@@ -31,15 +31,15 @@ export const categories: {
     slug: "growers",
     label: "Growers",
     description: "De toekomstige Giants. Bedrijven die snel groeien en dominant worden.",
-    image: "/images/growers-farmland.jpg",
-    imageAlt: "Een tractor voor een maisveld onder een bewolkte hemel",
+    image: "/images/growers-construction.jpg",
+    imageAlt: "Een bouwput met torenkranen en bekistingen, van bovenaf gezien",
   },
   {
     slug: "moonshots",
     label: "Moonshots",
     description: "Speculatief en met grote uitslagen. De loten.",
-    image: "/images/moonshots-apollo.jpg",
-    imageAlt: "De lancering van de Saturn V-raket van Apollo 11 in 1969",
+    image: "/images/moonshots-artemis.jpg",
+    imageAlt: "De nachtelijke lancering van Artemis I vanaf Kennedy Space Center in 2022",
   },
 ];
 

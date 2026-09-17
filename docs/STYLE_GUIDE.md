@@ -128,6 +128,12 @@ Three classes in `globals.css` do all the work:
   duty, because the banner's quote sits on a solid ink plate rather than on the photograph.
   **Never put text straight onto this one.**
 
+**Choosing a category photograph.** The card is a wide, dark strip — roughly 480×220 on a
+desktop — and the 70% scrim flattens everything behind it. A subject that depends on fine
+tonal detail (an aerial in even grey light, a distant horizon) turns to mush at that size;
+what survives is strong figure-ground: lit windows against night, an exhaust plume against
+black, coloured machinery against concrete. Judge a candidate in the card, never on its own.
+
 **Two ways to keep text legible over a photograph.** Scrim it, or plate it:
 
 | | When | Contrast |
@@ -146,7 +152,7 @@ and the band grows rather than clipping the quote. Keep that pairing on any fixe
 box that contains text.
 
 **The 70% is measured, not chosen by eye.** Text over a photograph has to survive the
-photograph's *brightest* region, not its average — the Apollo exhaust plume and the
+photograph's *brightest* region, not its average — the Artemis exhaust plume and the
 skyline's lit windows are exactly where a lighter scrim fails:
 
 | Scrim | Paper text over a pure-white highlight | |

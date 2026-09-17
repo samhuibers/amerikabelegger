@@ -1,7 +1,7 @@
 # Beeldverantwoording
 
 **These are placeholders.** They were chosen to show the design working, not as final art
-direction. All four are public domain, so nothing here creates an attribution obligation —
+direction. They are public domain or CC0, so nothing here creates an attribution obligation —
 but replacing them with licensed or commissioned photography is still the intent.
 
 Anything that replaces them must be checked against the same rule: the site never implies a
@@ -12,8 +12,8 @@ brand rests on.
 | File | Subject | Source | Creator | Licence |
 |---|---|---|---|---|
 | `giants-skyline.jpg` | Manhattan at night from the Empire State Building | [Flickr](https://www.flickr.com/photos/130478877@N02/23347480891) | jody.claborn | Public Domain Mark 1.0 |
-| `growers-farmland.jpg` | Tractor before a cornfield | [Flickr](https://www.flickr.com/photos/41284017@N08/54674663490) | USDAgov | Public Domain Mark 1.0 |
-| `moonshots-apollo.jpg` | Apollo 11 Saturn V liftoff, 16 July 1969 | [NASA image library](https://images.nasa.gov/details/S69-39961) | NASA (S69-39961) | Public domain (NASA) |
+| `growers-construction.jpg` | A building site seen from above: tower cranes, formwork, an excavator | [StockSnap](https://stocksnap.io/photo/building-structure-7CMLX06CWF) | Chuttersnap | CC0 1.0 |
+| `moonshots-artemis.jpg` | Artemis I liftoff from Launch Complex 39B, 16 November 2022 | [NASA image library](https://images.nasa.gov/details/NHQ202211160029) | NASA/Joel Kowsky (NHQ202211160029) | Public domain (NASA) |
 
 ### Banner
 
