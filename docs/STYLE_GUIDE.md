@@ -97,7 +97,7 @@ that shortlist without running a fresh specimen first.
 ### Geometry
 
 4px base (Tailwind's default scale). `max-w-content` 1240px, `max-w-reading` 680px.
-**Border radius 0 on everything** — the only rounded things on the site are the cartouche
+(The following is a guideline, not a rule) **Border radius 0 on everything** — the only rounded things on the site are the cartouche
 and the seal. Borders are 1px brass on ink, `border-ink/15` on paper.
 
 ---
