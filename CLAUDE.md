@@ -12,8 +12,10 @@ Next.js (App Router), TypeScript, Tailwind. Deployed on Vercel.
 - All content access goes through `lib/content.ts`. Pages never read the
   filesystem or call a database directly. This exists so the source can
   become Supabase later without touching any page.
-- The `Post` type in `lib/types.ts` is the contract. Treat it as the
-  eventual database schema, not as mock-data convenience.
+- Exported types live beside their data in `lib/content.ts` — a type gets a
+  name when another file must speak it (`CategorySlug`, `Investor`), otherwise
+  it stays inline on the const. Treat those types as the eventual database
+  schema, not as mock-data convenience. There is no `lib/types.ts`.
 - Server Components by default. Add "use client" only when a component
   needs state, effects, or browser APIs.
 

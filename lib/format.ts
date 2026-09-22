@@ -33,6 +33,15 @@ export function formatPercent(value: number, decimals = 1): string {
   return `${sign}${formatNumber(Math.abs(value), decimals)}%`;
 }
 
+/**
+ * `Q2 2026`. Here rather than in JSX for the same reason as the rest of this
+ * file: the quarter is a figure, and a figure typed at a call site is a figure
+ * that can drift. Every profielpagina repeats it above its portefeuille.
+ */
+export function formatQuarter(quarter: number, year: number): string {
+  return `Q${quarter} ${year}`;
+}
+
 /** `4 maart 2026` */
 export function formatDate(date: Date): string {
   return new Intl.DateTimeFormat(LOCALE, {

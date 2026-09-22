@@ -1,6 +1,9 @@
 /**
  * A page's title block: display title over a scotch rule.
- * The scotch rule appears here and nowhere else.
+ *
+ * The rule is "only under a section masthead" — this component is the page-level
+ * one, and an `h2` opening a section qualifies too (see /over-ons, /styleguide
+ * and /topbeleggers). It is never a divider between paragraphs.
  */
 export function Masthead({
   title,
