@@ -36,6 +36,9 @@ yarn-error.log*
 # vercel
 .vercel
 
+# 13F ingest (tools/13f/ingest.py)
+/tools/13f/.venv
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts

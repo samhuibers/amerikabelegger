@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Masthead } from "@/components/masthead";
 import {
-  filings,
+  getLatestQuarter,
   investors,
   styleGroups,
   type Investor,
@@ -37,7 +37,8 @@ export default function Page() {
   );
 }
 
-function Intro() {
+async function Intro() {
+  const { quarter, year } = await getLatestQuarter();
   return (
     <div className="max-w-reading">
       <p className="text-body-l">
@@ -58,7 +59,7 @@ function Intro() {
       </p>
       <p className="mt-10 text-body-s italic text-ink-soft">
         Portefeuilles staan op de profielpagina&apos;s, op basis van de meest
-        recente SEC-data, {formatQuarter(filings.quarter, filings.year)}.
+        recente SEC-data, {formatQuarter(quarter, year)}.
       </p>
     </div>
   );

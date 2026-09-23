@@ -156,13 +156,95 @@ export const media: {
   },
 ];
 
-/*
- * Het kwartaal waarvan de getoonde portefeuilles komen. Nog met de hand gezet
- * — er is nog geen ingest — maar nu op één plek, zodat er na de eerstvolgende
- * SEC-lezing niets in JSX hoeft te veranderen. Zodra de ingest draait komt dit
- * uit die data en verdwijnt deze const.
+/**
+ * Eén 13F-regel, opgeteld over de deelbeheerders van de indiener: Berkshire
+ * meldt één aandeel op meerdere regels. Opties staan apart van het aandeel.
+ * Bedragen in hele dollars.
  */
-export const filings = { year: 2026, quarter: 2 as 1 | 2 | 3 | 4 };
+export type Holding = {
+  cusip: string;
+  /** Zoals ingediend, in hoofdletters: "APPLE INC". */
+  issuer: string;
+  class: string;
+  /**
+   * Via de CUSIP opgezocht. Bij een converteerbare obligatie het aandeel van
+   * de uitgever, want een obligatie heeft er zelf geen. Klassen met een punt:
+   * BRK.B. Niet te vinden is `null`, en dan toont de pagina alleen de naam —
+   * nooit een geraden ticker.
+   */
+  ticker: string | null;
+  /** Beurs van een niet-Amerikaanse notering ("Amsterdam"); `null` is de VS. */
+  exchange: string | null;
+  shares: number;
+  /** PRN is een hoofdsom (converteerbare obligaties), geen aantal aandelen. */
+  shareType: "SH" | "PRN";
+  value: number;
+  /** De waarde van een optieregel is die van het onderliggende aandeel. */
+  putCall: "Put" | "Call" | null;
+};
+
+/**
+ * De laatste 13F van één belegger. Gewichten worden niet opgeslagen; ze volgen
+ * uit `value`.
+ *
+ * HOE DE PROFIELPAGINA DIT TOONT — besloten, zodat de ontwerpronde er niet
+ * opnieuw over hoeft:
+ *
+ * - Kop "Portefeuille", daaronder één bronregel: kwartaal, indieningsdatum en
+ *   een link naar de filing op sec.gov. Daarbij `thirteenF`, de ene zin over
+ *   wat een 13F is. Geen voorbehoud per belegger over wat er níét in staat: dat
+ *   deze site over Amerikaanse aandelen gaat, zegt de naam al.
+ * - De hoofdlijst bevat alleen aandelen, en de gewichten ("% van de
+ *   portefeuille") rekenen alleen over aandelen.
+ * - Daaronder "Opties en obligaties". Converteerbare obligaties met hun
+ *   marktwaarde. Opties als "Put (daalt-positie)" of "Call" met de waarde van
+ *   het onderliggende aandeel en nooit een gewicht: die waarde is niet wat er
+ *   op het spel staat. Als rangorde gelezen zou Marks' grootste positie
+ *   anders een put op State Street zijn.
+ * - Alleen bij een mix van instrumenten, bovenaan een zichtbare zin, geen
+ *   hover (die bestaat niet op een telefoon): "Deze belegger heeft 71%
+ *   aandelen en 29% obligaties in de portefeuille, plus 7 optieposities op
+ *   aandelen ter waarde van $ 1,9 mld." Aandelen en obligaties als deel van
+ *   hún samen opgetelde waarde. Opties als aantal en onderliggende waarde,
+ *   nooit als percentage. Zonder obligaties "alleen aandelen", nooit "100%".
+ *   Een deel onder 0,5% heet "minder dan 1%", en "1 optiepositie" enkelvoud.
+ */
+export type Portfolio = {
+  cik: string;
+  /** De indiener zoals de SEC hem noemt. */
+  filer: string;
+  accession: string;
+  form: "13F-HR" | "13F-HR/A";
+  /** Kwartaaleinde, ISO-datum. */
+  period: string;
+  filed: string;
+  totalValue: number;
+  holdings: Holding[];
+};
+
+/*
+ * Geschreven door tools/13f/ingest.py. Een dynamische import en geen fs of
+ * statische import: components/site-header.tsx is een client component die dit
+ * bestand importeert, en een halve megabyte holdings hoort niet in de browser.
+ * Async, zodat Supabase hier later in past zonder dat een pagina verandert.
+ */
+async function portfolios() {
+  return (await import("@/data/13f.json")).default as Record<string, Portfolio>;
+}
+
+export async function getPortfolio(slug: string): Promise<Portfolio | null> {
+  return (await portfolios())[slug] ?? null;
+}
+
+/** Het kwartaal van de meest recente 13F in de data. */
+export async function getLatestQuarter() {
+  const latest = Object.values(await portfolios())
+    .map((portfolio) => portfolio.period)
+    .sort()
+    .at(-1)!;
+  const [year, month] = latest.split("-").map(Number);
+  return { year, quarter: Math.ceil(month / 3) };
+}
 
 /**
  * Altijd in deze volgorde: van geduldig naar reactief. Dat is een leesvolgorde,
@@ -240,6 +322,14 @@ export type Investor = {
   name: string;
   /** Het huis waar vanuit belegd wordt. Nooit een functietitel. */
   firm: string;
+  /**
+   * SEC-nummer van wie de 13F indient, tien cijfers met voorloopnullen. Dat is
+   * niet altijd `firm`: Oakmark is Harris Associates, Pabrai is Dalal Street,
+   * Einhorn is sinds 2024 DME Capital, Cooperman dient op eigen naam in.
+   * Verplicht, want insluitingsregel (a) eist een 13F-plichtig vehikel. Het
+   * ingestscript leest zijn lijst hier vandaan: tools/13f/ingest.py.
+   */
+  cik: string;
   styleGroup: StyleGroupSlug;
   /** Twee of drie, in de asvolgorde van `StyleTag`. */
   styleTags: StyleTag[];
@@ -328,6 +418,7 @@ export const investors: Investor[] = [
     slug: "chuck-akre",
     name: "Chuck Akre",
     firm: "Akre Capital Management",
+    cik: "0001112520",
     styleGroup: "kwaliteit",
     styleTags: ["Kwaliteit", "Compounders", "Kopen en vasthouden"],
     horizon: "Zeer lang",
@@ -340,6 +431,7 @@ export const investors: Investor[] = [
     slug: "warren-buffett",
     name: "Warren Buffett",
     firm: "Berkshire Hathaway",
+    cik: "0001067983",
     styleGroup: "kwaliteit",
     styleTags: ["Kwaliteit", "Waarde", "Compounders"],
     horizon: "Zeer lang",
@@ -353,6 +445,7 @@ export const investors: Investor[] = [
     slug: "pat-dorsey",
     name: "Pat Dorsey",
     firm: "Dorsey Asset Management",
+    cik: "0001671657",
     styleGroup: "kwaliteit",
     styleTags: ["Concurrentievoordeel", "Compounders", "Geconcentreerd"],
     horizon: "Lang",
@@ -366,6 +459,7 @@ export const investors: Investor[] = [
     slug: "francois-rochon",
     name: "François Rochon",
     firm: "Giverny Capital",
+    cik: "0001641864",
     styleGroup: "kwaliteit",
     styleTags: ["Kwaliteit", "Groei", "Compounders"],
     horizon: "Zeer lang",
@@ -378,6 +472,7 @@ export const investors: Investor[] = [
     slug: "david-rolfe",
     name: "David Rolfe",
     firm: "Wedgewood Partners",
+    cik: "0000859804",
     styleGroup: "kwaliteit",
     styleTags: ["Kwaliteit", "Geconcentreerd", "Kopen en vasthouden"],
     horizon: "Zeer lang",
@@ -390,6 +485,7 @@ export const investors: Investor[] = [
     slug: "thomas-russo",
     name: "Thomas Russo",
     firm: "Gardner Russo & Quinn",
+    cik: "0000860643",
     styleGroup: "kwaliteit",
     styleTags: ["Kwaliteit", "Compounders", "Wereldwijd"],
     horizon: "Zeer lang",
@@ -402,6 +498,7 @@ export const investors: Investor[] = [
     slug: "terry-smith",
     name: "Terry Smith",
     firm: "Fundsmith",
+    cik: "0001569205",
     styleGroup: "kwaliteit",
     styleTags: ["Kwaliteit", "Compounders", "Kopen en vasthouden"],
     horizon: "Zeer lang",
@@ -414,6 +511,7 @@ export const investors: Investor[] = [
     slug: "josh-tarasoff",
     name: "Josh Tarasoff",
     firm: "Greenlea Lane Capital",
+    cik: "0001766504",
     styleGroup: "kwaliteit",
     styleTags: ["Kwaliteit", "Compounders", "Geconcentreerd"],
     horizon: "Zeer lang",
@@ -428,6 +526,7 @@ export const investors: Investor[] = [
     slug: "leon-cooperman",
     name: "Leon Cooperman",
     firm: "Omega Advisors",
+    cik: "0000898382",
     styleGroup: "waarde",
     styleTags: ["Waarde", "Fundamenteel onderzoek"],
     horizon: "Middellang",
@@ -441,6 +540,7 @@ export const investors: Investor[] = [
     slug: "glenn-greenberg",
     name: "Glenn Greenberg",
     firm: "Brave Warrior Advisors",
+    cik: "0001553733",
     styleGroup: "waarde",
     styleTags: ["Kwaliteit", "Fundamenteel onderzoek", "Geconcentreerd"],
     horizon: "Lang",
@@ -453,6 +553,7 @@ export const investors: Investor[] = [
     slug: "seth-klarman",
     name: "Seth Klarman",
     firm: "Baupost Group",
+    cik: "0001061768",
     styleGroup: "waarde",
     styleTags: ["Waarde", "Veiligheidsmarge", "Contrair"],
     horizon: "Lang",
@@ -465,6 +566,7 @@ export const investors: Investor[] = [
     slug: "li-lu",
     name: "Li Lu",
     firm: "Himalaya Capital",
+    cik: "0001709323",
     styleGroup: "waarde",
     styleTags: ["Waarde", "Kwaliteit", "Geconcentreerd"],
     horizon: "Zeer lang",
@@ -477,6 +579,7 @@ export const investors: Investor[] = [
     slug: "bill-nygren",
     name: "Bill Nygren",
     firm: "Oakmark Funds",
+    cik: "0000813917",
     styleGroup: "waarde",
     styleTags: ["Waarde", "Fundamenteel onderzoek"],
     horizon: "Lang",
@@ -489,6 +592,7 @@ export const investors: Investor[] = [
     slug: "wallace-weitz",
     name: "Wallace Weitz",
     firm: "Weitz Investment Management",
+    cik: "0000883965",
     styleGroup: "waarde",
     styleTags: ["Waarde", "Kwaliteit"],
     horizon: "Lang",
@@ -504,6 +608,7 @@ export const investors: Investor[] = [
     slug: "mason-hawkins",
     name: "Mason Hawkins",
     firm: "Southeastern Asset Management",
+    cik: "0000807985",
     styleGroup: "contrair",
     styleTags: ["Diepe waarde", "Contrair"],
     horizon: "Lang",
@@ -516,6 +621,7 @@ export const investors: Investor[] = [
     slug: "howard-marks",
     name: "Howard Marks",
     firm: "Oaktree Capital Management",
+    cik: "0000949509",
     styleGroup: "contrair",
     styleTags: ["Marktcycli", "Risicobeheersing", "Contrair"],
     horizon: "Cyclisch",
@@ -529,6 +635,7 @@ export const investors: Investor[] = [
     slug: "mohnish-pabrai",
     name: "Mohnish Pabrai",
     firm: "Pabrai Investments",
+    cik: "0001549575",
     styleGroup: "contrair",
     styleTags: ["Diepe waarde", "Geconcentreerd", "Asymmetrisch risico"],
     horizon: "Lang",
@@ -542,6 +649,7 @@ export const investors: Investor[] = [
     slug: "john-rogers",
     name: "John Rogers",
     firm: "Ariel Investments",
+    cik: "0000936753",
     styleGroup: "contrair",
     styleTags: ["Waarde", "Contrair"],
     horizon: "Lang",
@@ -555,6 +663,7 @@ export const investors: Investor[] = [
     slug: "david-tepper",
     name: "David Tepper",
     firm: "Appaloosa Management",
+    cik: "0001656456",
     styleGroup: "contrair",
     styleTags: ["Waarde", "Contrair", "Macro"],
     horizon: "Flexibel",
@@ -568,6 +677,7 @@ export const investors: Investor[] = [
     slug: "arnold-van-den-berg",
     name: "Arnold Van Den Berg",
     firm: "Century Management",
+    cik: "0001142062",
     styleGroup: "contrair",
     styleTags: ["Waarde", "Kapitaalbehoud"],
     horizon: "Lang",
@@ -581,6 +691,7 @@ export const investors: Investor[] = [
     slug: "prem-watsa",
     name: "Prem Watsa",
     firm: "Fairfax Financial",
+    cik: "0000915191",
     styleGroup: "contrair",
     styleTags: ["Waarde", "Kopen en vasthouden", "Verzekeraar"],
     horizon: "Zeer lang",
@@ -596,6 +707,7 @@ export const investors: Investor[] = [
     slug: "lee-ainslie",
     name: "Lee Ainslie",
     firm: "Maverick Capital",
+    cik: "0000934639",
     styleGroup: "groei",
     styleTags: ["Groei", "Fundamenteel onderzoek", "Technologie"],
     horizon: "Middellang",
@@ -608,6 +720,7 @@ export const investors: Investor[] = [
     slug: "chase-coleman",
     name: "Chase Coleman",
     firm: "Tiger Global",
+    cik: "0001167483",
     styleGroup: "groei",
     styleTags: ["Groei", "Technologie"],
     horizon: "Lang",
@@ -620,6 +733,7 @@ export const investors: Investor[] = [
     slug: "henry-ellenbogen",
     name: "Henry Ellenbogen",
     firm: "Durable Capital",
+    cik: "0001798849",
     styleGroup: "groei",
     styleTags: ["Groei", "Kwaliteit", "Compounders"],
     horizon: "Lang",
@@ -632,6 +746,7 @@ export const investors: Investor[] = [
     slug: "stephen-mandel",
     name: "Stephen Mandel",
     firm: "Lone Pine Capital",
+    cik: "0001061165",
     styleGroup: "groei",
     styleTags: ["Groei", "Kwaliteit", "Geconcentreerd"],
     horizon: "Lang",
@@ -645,6 +760,7 @@ export const investors: Investor[] = [
     slug: "bill-ackman",
     name: "Bill Ackman",
     firm: "Pershing Square",
+    cik: "0002026053",
     styleGroup: "activisme",
     styleTags: ["Kwaliteit", "Geconcentreerd", "Activisme"],
     horizon: "Lang",
@@ -658,6 +774,7 @@ export const investors: Investor[] = [
     slug: "david-einhorn",
     name: "David Einhorn",
     firm: "Greenlight Capital",
+    cik: "0001489933",
     styleGroup: "activisme",
     styleTags: ["Waarde", "Contrair", "Bijzondere situaties"],
     horizon: "Middellang",
@@ -671,6 +788,7 @@ export const investors: Investor[] = [
     slug: "chris-hohn",
     name: "Chris Hohn",
     firm: "TCI Fund Management",
+    cik: "0001647251",
     styleGroup: "activisme",
     styleTags: ["Kwaliteit", "Geconcentreerd", "Activisme"],
     horizon: "Lang",
@@ -683,6 +801,7 @@ export const investors: Investor[] = [
     slug: "daniel-loeb",
     name: "Daniel Loeb",
     firm: "Third Point",
+    cik: "0001040273",
     styleGroup: "activisme",
     styleTags: ["Waarde", "Activisme", "Bijzondere situaties"],
     horizon: "Middellang",
@@ -695,6 +814,7 @@ export const investors: Investor[] = [
     slug: "alex-roepers",
     name: "Alex Roepers",
     firm: "Atlantic Investment Management",
+    cik: "0001063296",
     styleGroup: "activisme",
     styleTags: ["Waarde", "Bijzondere situaties", "Industrie"],
     horizon: "Middellang",
@@ -714,6 +834,12 @@ export const positioning =
 export const disclaimer =
   "Niets op deze site is beleggingsadvies. Wij geven meningen van derden weer, " +
   "voorzien van bron en datum. Beleggen brengt risico's met zich mee; je kunt je inleg verliezen.";
+
+/** Onder de portefeuille op elke profielpagina. Eén zin, en meer hoeft het niet te zijn. */
+export const thirteenF =
+  "Een 13F is het kwartaaloverzicht waarin Amerikaanse vermogensbeheerders met " +
+  "meer dan 100 miljoen dollar aan beursbelegd vermogen hun aandelenposities " +
+  "aan de SEC melden.";
 
 /*
  * The three working principles, for /over-ons. Three is the whole list — they
