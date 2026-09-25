@@ -64,10 +64,8 @@ A failure keeps that investor's previous data and makes the script exit with an 
 
 ## Next up
 
-1. **Merge `13f-ingest` into `main`.** Earlier work went straight to `main`, so a fast-forward is enough.
-2. **Profile-page design pass** (`app/topbeleggers/[slug]/page.tsx`). Build to the rules in the `Portfolio` doc comment. Sam judges the result by looking at it, not by reading a description of it. This needs:
-   - a compact money formatter in `lib/format.ts` ("$ 1,9 mld", "$ 254 mln")
-   - the sec.gov link, built from `cik` and `accession`: `https://www.sec.gov/Archives/edgar/data/<cik without leading zeros>/<accession without dashes>/`
+1. ~~**Merge `13f-ingest` into `main`.**~~ Done 25 September 2026 (fast-forward).
+2. ~~**Profile-page design pass.**~~ Done 25 September 2026. Sam picked the strip with a two-column ledger below it from three rendered treatments. The choice is recorded in the `Portfolio` doc comment.
 3. **Readable company names.** SEC's names are raw ("COCA COLA CO", "STATE STR SPDR S&P 500 ETF"). The proper fix is the company table that the Giants, Growers and Moonshots categories will need anyway.
 4. **The TE CONTROLEREN note in `lib/content.ts`** still stands. Style, horizon and summaries need a source before publication. Also check whether Mandel (Lone Pine) still counts as active.
 

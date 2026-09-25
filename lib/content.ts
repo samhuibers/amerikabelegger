@@ -196,6 +196,10 @@ export type Holding = {
  *   deze site over Amerikaanse aandelen gaat, zegt de naam al.
  * - De hoofdlijst bevat alleen aandelen, en de gewichten ("% van de
  *   portefeuille") rekenen alleen over aandelen.
+ * - Vorm (gekozen uit drie gerenderde varianten, september 2026): eerst een
+ *   strook — de hele aandelenportefeuille als één band, de tien grootste als
+ *   segmenten en de rest als één blok. Daaronder die tien in een grootboek van
+ *   twee kolommen; de rest achter "Toon de overige". Namen zoals ingediend.
  * - Daaronder "Opties en obligaties". Converteerbare obligaties met hun
  *   marktwaarde. Opties als "Put (daalt-positie)" of "Call" met de waarde van
  *   het onderliggende aandeel en nooit een gewicht: die waarde is niet wat er

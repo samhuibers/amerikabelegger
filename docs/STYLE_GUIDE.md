@@ -206,7 +206,13 @@ the call site.
 | `formatCurrency(1234.56)` | `$ 1.234,56` (symbol, thin space, figure) |
 | `formatPercent(12.4)` | `+12,4%` |
 | `formatPercent(-3.1)` | `−3,1%` (true minus U+2212, not a hyphen) |
+| `formatCompactCurrency(1.9e9)` | `$ 1,9 mld` (and `$ 254 mln`, `$ 4,7 mln`; under a million the whole figure) |
+| `formatWeight(22.04)` | `22,0%` (a share of a whole, so unsigned; `< 0,1%` below that) |
+| `formatRoughShare(99.8)` | `meer dan 99%` (running text; `minder dan 1%` at the other end) |
 | `formatDate(...)` | `4 maart 2026` |
+
+The space after the currency symbol is a narrow **no-break** space (U+202F), so `$` never
+ends a line on its own.
 
 Quotes in copy: `‘enkel’` and `“dubbel”`.
 
