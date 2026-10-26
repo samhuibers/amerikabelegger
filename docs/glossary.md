@@ -13,3 +13,11 @@ Terms that come up in this project, explained plainly.
 **`ImageResponse` (`next/og`).** Built into Next.js. It turns JSX-like markup into a PNG. It's planned for the post cards, and it's the same engine as the `@vercel/og` package named in the content plan.
 
 **Webhook.** A URL of ours that another service calls when something happens. When someone taps "Plaats" in Telegram, Telegram calls our webhook, and that's when the post goes to X.
+
+**Static generation (prerendering).** Building a page or file once, during `npm run build`, instead of on every visit. The 30 Topbelegger cards and the 30 profile pages are prerendered (marked ● in the build output); Vercel then serves them as plain files.
+
+**CUSIP.** A nine-character code for a security, used in every 13F row. The first six characters identify the issuer, but one issuer can have many different securities (a fund family issues many ETFs), so we don't merge on those six alone.
+
+**Kerning.** Small spacing corrections between particular letter pairs ("Av", "To"). The card engine measures words without them and draws with them, which left gaps after long words. `keepTogether` in `app/kaart/shell.tsx` works around it.
+
+**Non-breaking space (`\u00a0`).** A space that looks normal but doesn't allow a line break. On the cards it makes the engine measure a whole line at once, which fixes the spacing.

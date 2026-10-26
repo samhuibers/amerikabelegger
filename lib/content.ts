@@ -240,6 +240,182 @@ export async function getPortfolio(slug: string): Promise<Portfolio | null> {
   return (await portfolios())[slug] ?? null;
 }
 
+/*
+ * Leesbare bedrijfsnamen, op ticker. De ticker en niet de ingediende naam is de
+ * sleutel: één bedrijf heet in de filings van verschillende indieners anders
+ * ("MASTERCARD INCORPORATED", "MASTERCARD CL A ORD", "Mastercard Inc Cl A").
+ * Aandelenklassen van één bedrijf krijgen dezelfde naam (GOOG en GOOGL) en
+ * worden daarop samengevoegd in `topPositions`.
+ *
+ * Gevuld met elke ticker die in iemands top vijf staat. Een naam die hier
+ * ontbreekt valt terug op `cleanIssuer`; wie in Telegram een lelijke naam ziet,
+ * voegt hem hier toe. Dit wordt later de bedrijventabel van de categorieën.
+ */
+const companyNames: Record<string, string> = {
+  AAPL: "Apple",
+  ABNB: "Airbnb",
+  ACHC: "Acadia Healthcare",
+  ACI: "Albertsons",
+  ADP: "ADP",
+  ALAB: "Astera Labs",
+  AMAT: "Applied Materials",
+  AMD: "AMD",
+  AMG: "Affiliated Managers Group",
+  AMR: "Alpha Metallurgical Resources",
+  AMZN: "Amazon",
+  APP: "AppLovin",
+  APTV: "Aptiv",
+  ASH: "Ashland",
+  ASML: "ASML",
+  AU: "AngloGold Ashanti",
+  AXP: "American Express",
+  BAC: "Bank of America",
+  BHF: "Brighthouse Financial",
+  BKNG: "Booking Holdings",
+  BN: "Brookfield",
+  "BRK.A": "Berkshire Hathaway",
+  "BRK.B": "Berkshire Hathaway",
+  CFR: "Richemont",
+  CNR: "Core Natural Resources",
+  CNX: "CNX Resources",
+  COF: "Capital One",
+  CP: "Canadian Pacific Kansas City",
+  CRH: "CRH",
+  CRL: "Charles River Laboratories",
+  CRM: "Salesforce",
+  CVS: "CVS Health",
+  DASH: "DoorDash",
+  DELL: "Dell Technologies",
+  DHR: "Danaher",
+  EGO: "Eldorado Gold",
+  ELV: "Elevance Health",
+  ET: "Energy Transfer",
+  EWBC: "East West Bancorp",
+  EXE: "Expand Energy",
+  FERG: "Ferguson",
+  FICO: "Fair Isaac",
+  FLR: "Fluor",
+  GE: "GE Aerospace",
+  GOOG: "Alphabet",
+  GOOGL: "Alphabet",
+  GPGI: "GPGI",
+  GRBK: "Green Brick Partners",
+  GTX: "Garrett Motion",
+  HCC: "Warrior Met Coal",
+  HD: "Home Depot",
+  HEI: "Heico",
+  "HEI.A": "Heico",
+  HHH: "Howard Hughes",
+  ICLR: "Icon",
+  INDV: "Indivior",
+  INTC: "Intel",
+  IQV: "IQVIA",
+  JLL: "JLL",
+  KDP: "Keurig Dr Pepper",
+  KEX: "Kirby",
+  KHC: "Kraft Heinz",
+  KKR: "KKR",
+  KO: "Coca-Cola",
+  KSPI: "Kaspi.kz",
+  LUMN: "Lumen Technologies",
+  MA: "Mastercard",
+  MAR: "Marriott",
+  MAT: "Mattel",
+  MCO: "Moody's",
+  MELI: "MercadoLibre",
+  META: "Meta",
+  MKL: "Markel",
+  MSFT: "Microsoft",
+  MSGE: "Madison Square Garden Entertainment",
+  MU: "Micron",
+  NBIS: "Nebius",
+  NVDA: "Nvidia",
+  OMF: "OneMain",
+  ORLA: "Orla Mining",
+  OSW: "OneSpaWorld",
+  PDD: "PDD Holdings",
+  PHYS: "Sprott Physical Gold Trust",
+  PLGO: "Pelagos Insurance Capital",
+  PM: "Philip Morris International",
+  PPLI: "People Inc.",
+  PVH: "PVH",
+  Q: "Qnity Electronics",
+  QSR: "Restaurant Brands International",
+  RBC: "RBC Bearings",
+  RIG: "Transocean",
+  RKT: "Rocket Companies",
+  RPRX: "Royalty Pharma",
+  RYN: "Rayonier",
+  SCHW: "Charles Schwab",
+  SGOV: "iShares 0-3 Month Treasury Bond ETF",
+  SLM: "Sallie Mae",
+  SNX: "TD Synnex",
+  SPGI: "S&P Global",
+  STX: "Seagate",
+  SYK: "Stryker",
+  TDS: "Telephone and Data Systems",
+  TRMD: "Torm",
+  TSM: "TSMC",
+  UAA: "Under Armour",
+  UBER: "Uber",
+  V: "Visa",
+  VRT: "Vertiv",
+  WAT: "Waters",
+  WBD: "Warner Bros. Discovery",
+  XOM: "ExxonMobil",
+  XRAY: "Dentsply Sirona",
+};
+
+/** Rechtsvormen en klasse-aanduidingen achteraan een ingediende naam. */
+const LEGAL_SUFFIXES = new Set([
+  "INC", "INCORPORATED", "CORP", "CORPORATION", "CO", "COS", "LTD", "LIMITED",
+  "PLC", "LP", "L", "P", "LLC", "NV", "N.V.", "SA", "AG", "SE", "DEL", "NEW",
+  "ORD", "CL", "A", "B", "C",
+]);
+
+/**
+ * Noodoplossing voor een ticker die niet in `companyNames` staat:
+ * "WATERS CORP" → "Waters". Afkortingen in de filing blijven staan
+ * ("APPLIED MATLS INC" → "Applied Matls"); daarvoor is de lijst.
+ */
+function cleanIssuer(issuer: string) {
+  const words = issuer.toUpperCase().split(/\s+/);
+  while (words.length > 1 && LEGAL_SUFFIXES.has(words.at(-1)!)) words.pop();
+  return words.map((w) => w[0] + w.slice(1).toLowerCase()).join(" ");
+}
+
+export function companyName(holding: Holding) {
+  return (holding.ticker && companyNames[holding.ticker]) || cleanIssuer(holding.issuer);
+}
+
+/**
+ * De grootste aandelenposities, met gewicht over alleen de aandelen — dezelfde
+ * regel als de profielpagina (zie `Portfolio`). Anders dan daar worden
+ * aandelenklassen samengevoegd: Li Lu's GOOGL en GOOG zijn samen "Alphabet".
+ *
+ * Samengevoegd wordt alleen op een naam uit `companyNames`, niet op de eerste
+ * zes tekens van de CUSIP (de uitgever): onder één iShares- of Vanguard-code
+ * vallen tientallen verschillende fondsen.
+ */
+export function topPositions(portfolio: Portfolio, count: number) {
+  const stocks = portfolio.holdings.filter((h) => h.shareType === "SH" && !h.putCall);
+  const total = stocks.reduce((sum, h) => sum + h.value, 0);
+
+  const merged = new Map<string, { name: string; value: number }>();
+  for (const h of stocks) {
+    const known = h.ticker ? companyNames[h.ticker] : undefined;
+    const key = known ?? h.cusip;
+    const entry = merged.get(key) ?? { name: companyName(h), value: 0 };
+    entry.value += h.value;
+    merged.set(key, entry);
+  }
+
+  return [...merged.values()]
+    .sort((a, b) => b.value - a.value)
+    .slice(0, count)
+    .map(({ name, value }) => ({ name, weight: (value / total) * 100 }));
+}
+
 /** Het kwartaal van de meest recente 13F in de data. */
 export async function getLatestQuarter() {
   const latest = Object.values(await portfolios())

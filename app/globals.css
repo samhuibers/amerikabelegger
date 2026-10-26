@@ -3,6 +3,10 @@
 /*
  * Design tokens. Every colour, size and container on the site is named here —
  * components never carry a raw hex value. See docs/STYLE_GUIDE.md.
+ *
+ * One sanctioned copy: the colours are repeated in `tokens` in
+ * app/kaart/shell.tsx, because the X post cards are drawn by ImageResponse,
+ * which can't read CSS. Change a colour here, change it there too.
  */
 @theme {
   /* Surfaces and structure. There is no pure white and no pure black. */

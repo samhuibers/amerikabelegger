@@ -22,7 +22,8 @@ Live specimen: **`/styleguide`**.
 ## Tokens
 
 All tokens live in [`app/globals.css`](../app/globals.css). **No component carries a raw
-hex value** — verified with `grep -rE '#[0-9a-fA-F]{6}' app components lib`.
+hex value** — verified with `grep -rE '#[0-9a-fA-F]{6}' app components lib`. The one
+exception is `app/kaart/shell.tsx`; see "Sanctioned deviation: post cards for X" below.
 
 ### Colour
 
@@ -37,8 +38,8 @@ hex value** — verified with `grep -rE '#[0-9a-fA-F]{6}' app components lib`.
 | `--color-giants` | `#2E4A6B` | Steel navy |
 | `--color-growers` | `#3E6B4A` | Bottle green |
 | `--color-moonshots` | `#A24A1B` | Burnt orange — **darkened from `#B4521E` for AA** |
-| `--color-up` | `#1F6B44` | On ledger only |
-| `--color-down` | `#B23B30` | On ledger only |
+| `--color-up` | `#1F6B44` | On ledger only (post cards: also the background line on paper) |
+| `--color-down` | `#B23B30` | On ledger only (post cards: also the background line on paper) |
 
 No white. No black. No gradients, no glassmorphism, no blurred shadows. No dark mode in v1.
 
@@ -103,6 +104,9 @@ and the seal. Borders are 1px brass on ink, `border-ink/15` on paper.
 ---
 
 ## Ornament — four devices, and only these
+
+On the site, that is. The X post cards add a fifth, the skyline, and only there; see
+"Sanctioned deviation: post cards for X".
 
 1. **Guilloché** ([`components/guilloche.tsx`](../components/guilloche.tsx)) — a 24–32px
    band between regions, or a hero backdrop at 7% brass on ink. Never behind body text.
@@ -169,13 +173,54 @@ Rules for any image that replaces these:
 - Category images get a real `alt` describing the photograph. The banner is decorative
   (`alt=""`) because the brand line beside it carries the meaning.
 - No chart-going-up imagery, no money, no celebration of profit — the compliance line in
-  "Things that would make this wrong" applies to pictures exactly as it does to copy.
+  "Things that would make this wrong" applies to pictures exactly as it does to copy. The one
+  exception is the decorative price line on the X post cards, which never shows real data.
 
 ## Motion
 
 One orchestrated moment: the ticker. Everything else is static — no scroll animation, no
 hover lift. Hover changes colour or underline only. `prefers-reduced-motion` halts the
 ticker and leaves a readable static row.
+
+## Sanctioned deviation: post cards for X
+
+The PNG cards under `/kaart/...` ([`app/kaart/`](../app/kaart/)) live in a different place
+from the site: a timeline where people scroll past in a second, mostly on a phone. A card has
+to make someone stop. Decided by Sam on 27 October 2026, after comparing rendered variants. On
+the site itself, none of the rules below change.
+
+**What the cards may do that the site may not:**
+
+- **A price line in the background** ([`backdrop.tsx`](../app/kaart/backdrop.tsx)). It runs
+  from lower left to upper right in short runs, each segment green (`up`) when it rises and red
+  (`down`) when it falls, at 45% opacity on paper. It is the same fixed line on every card and
+  never stands for real data, so it is decoration, not a figure. The rule that direction is
+  never shown in colour alone applies to values, and still holds for every value on a card.
+- **A skyline as a fifth ornament**, only on cards: Golden Gate, Space Needle, Gateway Arch,
+  Manhattan and the Statue of Liberty, drawn in simple shapes in the format's colour at 9%.
+  Drawn in-house, so there is no licence to track.
+- **Type sized for a phone.** X shows a 1600 px card about 400 px wide, so card type is roughly
+  three times the site scale: the name in Bodoni at 150 px (smaller when the longest word has
+  more than seven letters, so it never runs under the data panel), figures at 48 px, the band
+  at 42 px. The smallest text on a card is the 30 px footer.
+- **Text over the line sits on its own patch of paper**, so the line never runs through
+  letters. A glow around the letters would be subtler, but `ImageResponse` doesn't draw
+  `textShadow`.
+
+**What stays the same:** the paper surface, the ink band with a brass rule, sentence case,
+Bodoni for the name and the wordmark, a ledger panel for figures. The data is always the first
+thing you read: the decoration stays light, and every number on a card comes from the data.
+
+**Constraints of the engine** (`ImageResponse` reads neither CSS nor Tailwind classes, only
+inline styles):
+
+- **Raw hex values.** `tokens` in `shell.tsx` copies the colours from `globals.css`. It is the
+  one place outside `globals.css` where hex values are allowed, and both files carry a comment
+  pointing at the other. Change a colour in one, change it in both.
+- **Fonts as files.** Libre Franklin (regular and medium) and Bodoni Moda live as static TTFs in
+  `assets/fonts/`, with their OFL licences, because `ImageResponse` can't use `next/font`'s WOFF2.
+- **Word spacing.** The engine leaves a gap after long words unless a line is kept together
+  with non-breaking spaces (`keepTogether` in `shell.tsx`).
 
 ## Sanctioned deviation — the homepage filmstrip
 

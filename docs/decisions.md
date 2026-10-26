@@ -80,3 +80,35 @@ Earlier decisions about the 13F ingest are in [handover.md](handover.md).
 **Chose:** Sam runs `ingest.py` each morning from about 12 to 27 Nov, reviews the diff, and commits. Vercel redeploys.
 **Instead of:** a scheduled GitHub Action from the start.
 **Why:** one less moving part before the deadline, and Sam learns the flow first. Automate it afterwards (tracked in TODO.md).
+
+## 2026-10-26: Post cards are route handlers drawn with ImageResponse
+**Chose:** one URL per card (`/kaart/topbelegger/[slug]`), drawn by `ImageResponse` from `next/og` and prerendered for all 30 at build time. One shared shell (`app/kaart/shell.tsx`) holds the band, footer, colours and fonts.
+**Instead of:** rendering a normal page with Tailwind and screenshotting it with Playwright (as `tools/post-mockups/render.mjs` does).
+**Why:** no headless browser is needed where the posts are made, and it's built into Next.js. The price is a copy of the colour tokens in `shell.tsx` and font files in `assets/fonts/`, both recorded in the style guide.
+
+## 2026-10-26: Company names are keyed by ticker, and share classes merge on that name
+**Chose:** `companyNames` in `lib/content.ts`, keyed by ticker, seeded with every ticker in anyone's top five. Anything missing falls back to automatic clean-up. `topPositions` merges holdings that map to the same name (GOOG + GOOGL → Alphabet).
+**Instead of:** an override list keyed by the filed name, or merging on the issuer code (the first 6 characters of the CUSIP).
+**Why:** one company is filed under several names (Mastercard appears three ways). The issuer code would wrongly merge different ETFs from one fund family (iShares, Vanguard).
+
+## 2026-10-26: Topbelegger cards show the style group
+**Chose:** "firm · style group" under the name (e.g. "Pershing Square · Activisme en bijzondere situaties").
+**Instead of:** leaving style off until the TE CONTROLEREN check is done.
+**Why:** Sam's call. A wrong label gets caught in the Telegram approval step, and Sam is verifying the styles before launch anyway.
+
+## 2026-10-26: The card band shows the quarter, not the posting date
+**Chose:** "Q2 2026" on the right of the band.
+**Instead of:** the posting day ("VR 9 OKT"), as in the PDF mockups.
+**Why:** a posting date would make every card depend on the day it's posted, so cards couldn't be prerendered. X already shows when something was posted, and the quarter is the date that matters for the data.
+
+## 2026-10-27: Post cards get a price line, a skyline and phone-sized type
+**Chose:** version B from the demo:
+- type about three times the site scale, so the card is readable at the ~400 px X shows on a phone
+- a fixed background line in short runs, green where it rises and red where it falls
+- a hand-drawn skyline (Golden Gate to the Statue of Liberty) in the format's colour
+
+All three are written into the style guide as card-only exceptions.
+**Instead of:** the plain card that followed the site's style guide (too "boring and professional" to stop a scroll), or version A with site-sized type (illegible on a phone).
+**Why:** a card on X has a second to make someone stop.
+**Trade-off we accepted:** the style guide banned chart-going-up imagery because it can suggest returns. The line is decorative, never real data, and shows falls as well as rises. Every figure on the card still comes from the data.
+**Details:** text that crosses the line sits on a patch of paper, because the engine doesn't draw `textShadow`. Names shrink when the longest word has more than seven letters ("Cooperman"), so they never run under the positions panel.
