@@ -4,6 +4,9 @@ Open work and points of attention. Decisions and their reasons live in
 [docs/decisions.md](docs/decisions.md); this file only says what still has to happen.
 Remove an item once it's done.
 
+**Next session: start with [docs/plan-step-2.md](docs/plan-step-2.md)** (post text and the
+preview page; draft, waiting for Sam's OK).
+
 ## Phase 1: X content engine (deadline: Q3 13F filings, ~16 Nov 2026)
 
 ### Live by ~16 Nov
