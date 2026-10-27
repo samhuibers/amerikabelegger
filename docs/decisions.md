@@ -112,3 +112,8 @@ All three are written into the style guide as card-only exceptions.
 **Why:** a card on X has a second to make someone stop.
 **Trade-off we accepted:** the style guide banned chart-going-up imagery because it can suggest returns. The line is decorative, never real data, and shows falls as well as rises. Every figure on the card still comes from the data.
 **Details:** text that crosses the line sits on a patch of paper, because the engine doesn't draw `textShadow`. Names shrink when the longest word has more than seven letters ("Cooperman"), so they never run under the positions panel.
+
+## 2026-10-27: The X handle is @amerikabelegger
+**Chose:** @amerikabelegger, secured by Sam on a newly created account. That account becomes the brand account (shared team email, 2FA) rather than being renamed.
+**Instead of:** renaming it and claiming the handle again on a fresh brand account.
+**Why:** renaming frees the handle, and anyone could take it before the new account claims it.

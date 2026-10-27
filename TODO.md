@@ -40,9 +40,12 @@ preview page; draft, waiting for Sam's OK).
 - [ ] Supabase: deferred to phase 2.
 
 ### Waiting on the team (start now, these block the build)
-- [ ] **Create the X account and an X developer account** with pay-per-use billing.
-  Use a shared team email with 2FA, not anyone's personal account. The access tokens
-  let our code post as the brand.
+- [x] Handle **@amerikabelegger** secured (27 Oct 2026), for now on an account Sam created.
+- [ ] **Make that account the brand account:** switch it to a shared team email, turn on 2FA,
+  set the display name and photo. Don't rename it to free the handle for a new account:
+  anyone could claim @amerikabelegger in between.
+- [ ] **Create the X developer account** with pay-per-use billing, attached to the brand
+  account. The access tokens let our code post as the brand.
 - [ ] **Price-data budget.** Claude prepares a comparison of providers whose terms allow
   public display; the team decides. Wall Street gisteren and the real ticker are blocked until then.
 - [ ] Create the Telegram bot (via BotFather) and the approval group; collect the approvers' Telegram user IDs.
