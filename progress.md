@@ -11,6 +11,8 @@ What Sam has actually learned, based on evidence: a check question answered, or 
   routes were the exception.)
 - 2026-10-27: Why a chosen card design reaches every post type: all cards are drawn by
   `renderCard()` in `app/kaart/shell.tsx`, so the design changes in one place.
+- 2026-10-27: Why Kwartaalseizoen shows only "nieuw" and "helemaal verkocht": after a stock split
+  the share count jumps without a purchase, so "bijgekocht" would be false.
 
 ## Can do myself
 
@@ -18,6 +20,9 @@ What Sam has actually learned, based on evidence: a check question answered, or 
 - 2026-10-26: How new data reaches prerendered pages. Knew to run the 13F ingest first, but not
   that the live cards only change after commit → push → Vercel rebuild, because they're drawn
   at build time. Ask again after the first real quarterly update.
+  - 2026-10-27, still shaky: asked what must happen between the morning ingest and the 15:00
+    post, answered "npm run build". That only builds on the laptop; the live site needs commit →
+    push → Vercel build. Knew that the live preview would show old data without it.
 - 2026-10-27: Why `/voorvertoning` renders per visit (ƒ) while the cards are built once (●).
   Answered that code changes wouldn't show up. In fact every commit rebuilds; the real problem
   is that the date changes without a commit, so a built-once preview goes stale. Also thought
