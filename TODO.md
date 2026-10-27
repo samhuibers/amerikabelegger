@@ -4,8 +4,8 @@ Open work and points of attention. Decisions and their reasons live in
 [docs/decisions.md](docs/decisions.md); this file only says what still has to happen.
 Remove an item once it's done.
 
-**Next session:** step 2 is built (see [docs/plan-step-2.md](docs/plan-step-2.md)). Next is
-step 3, Kwartaalseizoen: write its plan first.
+**Next session: start with [docs/plan-step-3.md](docs/plan-step-3.md)** (Kwartaalseizoen;
+draft, waiting for Sam's OK). What steps 1 and 2 built is in [docs/build-log.md](docs/build-log.md).
 
 ## Phase 1: X content engine (deadline: Q3 13F filings, ~16 Nov 2026)
 
@@ -20,7 +20,8 @@ step 3, Kwartaalseizoen: write its plan first.
 
 ### Post types: still undecided
 These are `null` in `postTypes` in `lib/posts.ts`; the preview shows "nog niet bepaald".
-- [ ] **Slots:** Giant, Grower and Moonshot van de week; Week vooruit; Alerts.
+- [ ] **Slots:** decided except Alerts (schedule in decisions.md, 27 Oct). Step 3 writes them into
+  `postTypes`.
 - [ ] **Colours:** Wall Street gisteren, Week vooruit, Alerts (they show in ink for now).
 - [ ] **Band label for alerts:** "Alert" is a placeholder.
 

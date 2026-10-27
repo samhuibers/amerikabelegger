@@ -156,3 +156,14 @@ $UBER $BN $MSFT
 **Chose:** `/voorvertoning`, rendered on every visit, not linked from the site, with `robots: noindex`.
 **Instead of:** a password (environment variables and a `proxy.ts`).
 **Why:** it shows only public 13F data. The real approval happens in Telegram.
+
+## 2026-10-27: The weekly schedule
+**Chose (from the content plan, open to change):** Wall Street gisteren Mon–Fri at 07:30. At 15:00: Week vooruit on Monday, Giant van de week on Tuesday, Grower on Wednesday, Moonshot on Thursday, Topbelegger on Friday.
+**Kwartaalseizoen:** four times a year, for two weeks after the 13F deadline, it takes the Mon–Thu 15:00 slots ("Wat kochten en verkochten de topbeleggers?"). Topbelegger keeps Friday and shows the newest quarter.
+**Instead of:** pausing the Topbelegger rotation during the season.
+**Why:** the weekly Topbelegger rhythm continues, and the Friday post picks up the fresh filings anyway.
+
+## 2026-10-27: Kwartaalseizoen shows only "nieuw" and "verkocht"
+**Chose:** positions that are new this quarter or fully sold.
+**Instead of:** also "bijgekocht" and "afgebouwd".
+**Why:** those compare share counts, and a stock split looks exactly like a large purchase. Without split data that would say something false. Comparing weights instead mixes trading with price moves. New and sold are plain yes/no facts.
