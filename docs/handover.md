@@ -8,6 +8,7 @@ Each of the 30 topbeleggers now has their latest 13F filing (Q2 2026) stored in 
 
 - **[tools/13f/ingest.py](../tools/13f/ingest.py):** pulls each investor's latest 13F-HR from SEC EDGAR into `data/13f.json`. It runs by hand, never in the Vercel build.
 - **[data/13f.json](../data/13f.json):** the output, committed. It holds 1,489 holdings across 30 investors. Git history is the archive of past quarters.
+  - *Since 27 Oct 2026:* two quarters per investor, `{ latest, previous }`, for Kwartaalseizoen. `previous` is the quarter right before `latest` (or `null`). The script prints a `previous <date>: new / unchanged / none` line per investor.
 - **[lib/content.ts](../lib/content.ts):**
   - each `Investor` gains a `cik` (the SEC number of whoever files the 13F)
   - new types `Portfolio` and `Holding`
@@ -38,6 +39,16 @@ SEC requires every request to name a person, so the email is set at runtime and 
 - **filer name, period, filing date, number of rows and total value**
 
 A failure keeps that investor's previous data and makes the script exit with an error. Review the `git diff` on `data/13f.json` and commit it.
+
+### During Kwartaalseizoen (added 27 Oct 2026)
+
+Each morning of the season:
+1. Run the ingest as above.
+2. Check the `previous` lines:
+   - `new` or `unchanged` is fine.
+   - `SKIPPED` means the two quarters' totals differ more than threefold, so the comparison was dropped (like Ackman's Q1 2026). Check on sec.gov whether the filer changed.
+3. Look at the Kwartaalseizoen section of `/voorvertoning` against a production build (`npm run build && npx next start`). Look for ugly company names ("Occidental Pete") and add each one to `companyNames` in `lib/content.ts`, keyed by ticker.
+4. Commit `data/13f.json` and any new names. Vercel redeploys, so the 15:00 post uses the new data.
 
 ## Decisions already made (don't reopen)
 

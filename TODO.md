@@ -4,8 +4,9 @@ Open work and points of attention. Decisions and their reasons live in
 [docs/decisions.md](docs/decisions.md); this file only says what still has to happen.
 Remove an item once it's done.
 
-**Next session: start with [docs/plan-step-3.md](docs/plan-step-3.md)** (Kwartaalseizoen;
-draft, waiting for Sam's OK). What steps 1 and 2 built is in [docs/build-log.md](docs/build-log.md).
+**Next session:** step 3 (Kwartaalseizoen) is built. Next is step 4, Telegram approval → X
+posting: write its plan first. It's blocked on the X developer account and the Telegram bot (see
+"Waiting on the team"). What steps 1–3 built is in [docs/build-log.md](docs/build-log.md).
 
 ## Phase 1: X content engine (deadline: Q3 13F filings, ~16 Nov 2026)
 
@@ -29,7 +30,6 @@ These are `null` in `postTypes` in `lib/posts.ts`; the preview shows "nog niet b
 - [ ] **Launch Friday:** `ROTATION_START` in `lib/posts.ts` is Fri 13 Nov 2026 (likely, subject
   to change). Changing it changes who goes first.
 - [ ] **Rotation order** in `lib/posts.ts` is Claude's draft. Sam and the partners review it.
-- [ ] Kwartaalseizoen: keep the previous quarter's 13F next to the current one so we can diff (watch out for stock splits)
 - [ ] Wall Street gisteren: needs a price-data provider (commercial licence, see below) and a US market holiday calendar
 - [ ] Telegram approval flow: scheduled job → preview in Telegram → "Plaats" / "Overslaan" → post via X API
 - [ ] Company names: extend `companyNames` in `lib/content.ts` whenever an ugly fallback name shows up (top five is covered)
@@ -38,8 +38,11 @@ These are `null` in `postTypes` in `lib/posts.ts`; the preview shows "nog niet b
 - [ ] Empty pages (Giants, Growers, Moonshots, Influencers, Modelportefeuilles): a "binnenkort" note
 - [ ] Newsletter signup: pick a hosted service and link it from the X bio and the site
 
-### During the first quarter season (~12–27 Nov)
-- [ ] Sam runs `tools/13f/ingest.py` by hand every morning, reviews the diff and commits
+### During the first quarter season (~12–30 Nov; Kwartaalseizoen posts 17–30 Nov)
+- [ ] Sam runs `tools/13f/ingest.py` by hand every morning, reviews the diff and commits.
+  The routine is in [docs/handover.md](docs/handover.md), "During Kwartaalseizoen".
+- [ ] **Run it on the morning of Tue 17 Nov at the latest**, so the on-time filers are all in
+  before the first Kwartaalseizoen post. That fixes the order for the season.
 
 ### After launch
 - [ ] Giant, Grower and Moonshot van de week (needs the company table with categories)
@@ -56,6 +59,8 @@ These are `null` in `postTypes` in `lib/posts.ts`; the preview shows "nog niet b
 - [ ] Vercel Hobby → Pro. Hobby is meant for non-commercial use, and its cron timing is
   imprecise. Required before fully automatic posting.
 - [ ] Supabase: deferred to phase 2.
+- [ ] **Kwartaalseizoen covers 8 of the 30 investors per season** (one per Mon–Thu slot for two
+  weeks). Fine for now (Sam, 27 Oct). Revisit: two investors per day, or a longer season.
 
 ### Waiting on the team (start now, these block the build)
 - [x] Handle **@amerikabelegger** secured (27 Oct 2026), for now on an account Sam created.

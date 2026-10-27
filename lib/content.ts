@@ -231,13 +231,24 @@ export type Portfolio = {
  * statische import: components/site-header.tsx is een client component die dit
  * bestand importeert, en een halve megabyte holdings hoort niet in de browser.
  * Async, zodat Supabase hier later in past zonder dat een pagina verandert.
+ *
+ * Per belegger twee kwartalen: de laatste 13F en die van het kwartaal ervoor,
+ * voor Kwartaalseizoen. `previous` is `null` als dat kwartaal ontbreekt.
  */
 async function portfolios() {
-  return (await import("@/data/13f.json")).default as Record<string, Portfolio>;
+  return (await import("@/data/13f.json")).default as Record<
+    string,
+    { latest: Portfolio; previous: Portfolio | null }
+  >;
 }
 
 export async function getPortfolio(slug: string): Promise<Portfolio | null> {
-  return (await portfolios())[slug] ?? null;
+  return (await portfolios())[slug]?.latest ?? null;
+}
+
+/** De 13F van het kwartaal vóór `getPortfolio(slug)`. */
+export async function getPreviousPortfolio(slug: string): Promise<Portfolio | null> {
+  return (await portfolios())[slug]?.previous ?? null;
 }
 
 /**
@@ -273,6 +284,7 @@ export function portfolioPeriod(portfolio: Portfolio) {
  * voegt hem hier toe. Dit wordt later de bedrijventabel van de categorieën.
  */
 const companyNames: Record<string, string> = {
+  AAL: "American Airlines",
   AAPL: "Apple",
   ABNB: "Airbnb",
   ACHC: "Acadia Healthcare",
@@ -290,13 +302,16 @@ const companyNames: Record<string, string> = {
   ASML: "ASML",
   AU: "AngloGold Ashanti",
   AXP: "American Express",
+  AXTA: "Axalta",
   BAC: "Bank of America",
   BHF: "Brighthouse Financial",
   BKNG: "Booking Holdings",
   BN: "Brookfield",
   "BRK.A": "Berkshire Hathaway",
   "BRK.B": "Berkshire Hathaway",
+  CBL: "CBL & Associates",
   CFR: "Richemont",
+  CME: "CME Group",
   CNR: "Core Natural Resources",
   CNX: "CNX Resources",
   COF: "Capital One",
@@ -304,21 +319,27 @@ const companyNames: Record<string, string> = {
   CRH: "CRH",
   CRL: "Charles River Laboratories",
   CRM: "Salesforce",
+  CRWV: "CoreWeave",
   CVS: "CVS Health",
   DASH: "DoorDash",
   DELL: "Dell Technologies",
+  DHI: "D.R. Horton",
   DHR: "Danaher",
   EGO: "Eldorado Gold",
   ELV: "Elevance Health",
   ET: "Energy Transfer",
   EWBC: "East West Bancorp",
   EXE: "Expand Energy",
+  FBIN: "Fortune Brands Innovations",
   FERG: "Ferguson",
   FICO: "Fair Isaac",
   FLR: "Fluor",
   GE: "GE Aerospace",
   GOOG: "Alphabet",
   GOOGL: "Alphabet",
+  // Depositary shares van preferente aandelen, geen gewone: Loeb had Alphabet al.
+  GOOGM: "Alphabet (preferent)",
+  GOOGN: "Alphabet (preferent)",
   GPGI: "GPGI",
   GRBK: "Green Brick Partners",
   GTX: "Garrett Motion",
@@ -346,19 +367,25 @@ const companyNames: Record<string, string> = {
   MELI: "MercadoLibre",
   META: "Meta",
   MKL: "Markel",
+  MMYT: "MakeMyTrip",
   MSFT: "Microsoft",
   MSGE: "Madison Square Garden Entertainment",
+  MTD: "Mettler-Toledo",
   MU: "Micron",
   NBIS: "Nebius",
+  NOK: "Nokia",
   NVDA: "Nvidia",
   OMF: "OneMain",
   ORLA: "Orla Mining",
   OSW: "OneSpaWorld",
+  OXY: "Occidental Petroleum",
+  PBR: "Petrobras",
   PDD: "PDD Holdings",
   PHYS: "Sprott Physical Gold Trust",
   PLGO: "Pelagos Insurance Capital",
   PM: "Philip Morris International",
   PPLI: "People Inc.",
+  PTON: "Peloton",
   PVH: "PVH",
   Q: "Qnity Electronics",
   QSR: "Restaurant Brands International",
@@ -368,6 +395,7 @@ const companyNames: Record<string, string> = {
   RPRX: "Royalty Pharma",
   RYN: "Rayonier",
   SCHW: "Charles Schwab",
+  SE: "Sea Limited",
   SGOV: "iShares 0-3 Month Treasury Bond ETF",
   SLM: "Sallie Mae",
   SNX: "TD Synnex",
@@ -381,6 +409,7 @@ const companyNames: Record<string, string> = {
   UBER: "Uber",
   V: "Visa",
   VRT: "Vertiv",
+  VSXY: "Victoria's Secret",
   WAT: "Waters",
   WBD: "Warner Bros. Discovery",
   XOM: "ExxonMobil",
@@ -389,7 +418,7 @@ const companyNames: Record<string, string> = {
 
 /** Rechtsvormen en klasse-aanduidingen achteraan een ingediende naam. */
 const LEGAL_SUFFIXES = new Set([
-  "INC", "INCORPORATED", "CORP", "CORPORATION", "CO", "COS", "LTD", "LIMITED",
+  "INC", "INC.", "INCORPORATED", "CORP", "CORP.", "CORPORATION", "CO", "COS", "LTD", "LIMITED",
   "PLC", "LP", "L", "P", "LLC", "NV", "N.V.", "SA", "AG", "SE", "DEL", "NEW",
   "ORD", "CL", "A", "B", "C",
 ]);
@@ -414,14 +443,40 @@ export function companyName(holding: Holding) {
  * regel als de profielpagina (zie `Portfolio`). Anders dan daar worden
  * aandelenklassen samengevoegd: Li Lu's GOOGL en GOOG zijn samen "Alphabet".
  *
- * Samengevoegd wordt alleen op een naam uit `companyNames`, niet op de eerste
- * zes tekens van de CUSIP (de uitgever): onder één iShares- of Vanguard-code
- * vallen tientallen verschillende fondsen.
+ * Samengevoegd wordt op een naam uit `companyNames`, anders op de ticker, en
+ * niet op de eerste zes tekens van de CUSIP (de uitgever): onder één iShares-
+ * of Vanguard-code vallen tientallen verschillende fondsen.
  *
  * `ticker` is die van de grootste klasse (de cashtag in een post), en `null`
  * bij een notering buiten de VS of een onbekende ticker.
  */
 export function topPositions(portfolio: Portfolio, count: number) {
+  return stockPositions(portfolio).slice(0, count);
+}
+
+/**
+ * Wat er sinds het kwartaal ervoor veranderde: aandelen die erbij kwamen (met
+ * hun gewicht nu) en aandelen die helemaal weg zijn (met hun gewicht toen).
+ * Bijgekocht en afgebouwd niet: een aandelensplitsing lijkt in de aantallen
+ * precies op een grote aankoop (docs/decisions.md, 27 oktober 2026).
+ *
+ * Vergeleken op dezelfde sleutel als het samenvoegen, nooit op de ingediende
+ * naam: "MASTERCARD INC" het ene kwartaal en "MASTERCARD INCORPORATED" het
+ * volgende zou anders een verkoop plus een aankoop zijn.
+ */
+export function positionChanges(latest: Portfolio, previous: Portfolio) {
+  const now = stockPositions(latest);
+  const then = stockPositions(previous);
+  const heldNow = new Set(now.map((position) => position.key));
+  const heldThen = new Set(then.map((position) => position.key));
+  return {
+    added: now.filter((position) => !heldThen.has(position.key)),
+    sold: then.filter((position) => !heldNow.has(position.key)),
+  };
+}
+
+/** Alle aandelenposities, klassen samengevoegd, grootste eerst (zie `topPositions`). */
+function stockPositions(portfolio: Portfolio) {
   const stocks = portfolio.holdings
     .filter((h) => h.shareType === "SH" && !h.putCall)
     .sort((a, b) => b.value - a.value);
@@ -430,22 +485,21 @@ export function topPositions(portfolio: Portfolio, count: number) {
   const merged = new Map<string, { name: string; value: number; ticker: string | null }>();
   for (const h of stocks) {
     const known = h.ticker ? companyNames[h.ticker] : undefined;
-    const key = known ?? h.cusip;
+    const key = known ?? h.ticker ?? h.cusip;
     const entry = merged.get(key) ?? { name: companyName(h), value: 0, ticker: h.exchange ? null : h.ticker };
     entry.value += h.value;
     merged.set(key, entry);
   }
 
-  return [...merged.values()]
-    .sort((a, b) => b.value - a.value)
-    .slice(0, count)
-    .map(({ name, value, ticker }) => ({ name, weight: (value / total) * 100, ticker }));
+  return [...merged]
+    .sort(([, a], [, b]) => b.value - a.value)
+    .map(([key, { name, value, ticker }]) => ({ key, name, weight: (value / total) * 100, ticker }));
 }
 
 /** Het kwartaal van de meest recente 13F in de data. */
 export async function getLatestQuarter() {
   const latest = Object.values(await portfolios())
-    .map((portfolio) => portfolio.period)
+    .map(({ latest }) => latest.period)
     .sort()
     .at(-1)!;
   const [year, month] = latest.split("-").map(Number);

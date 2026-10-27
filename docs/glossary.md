@@ -31,3 +31,9 @@ Terms that come up in this project, explained plainly.
 **Weighted character count.** X doesn't count every character as 1. Latin letters and normal punctuation count 1, emoji and many special characters 2. `xLength()` in `lib/posts.ts` counts the way X does.
 
 **noindex.** An instruction in a page's metadata that asks search engines not to list the page. Used on `/voorvertoning`.
+
+**Filer.** The legal entity that submits a 13F, identified by its CIK number. It isn't always the firm we show: Pershing Square Inc. filed Ackman's full portfolio from Q2 2026, Pershing Square Capital Management before that. `ingest.py` skips a comparison when the two quarters clearly don't cover the same portfolio.
+
+**Depositary share.** A share that stands for a fraction of another security, here 1/20 of an Alphabet preferred share (GOOGM, GOOGN). It's a different security from the common stock, so it gets its own name in `companyNames`.
+
+**Kwartaalseizoen order.** Which investor gets which season day. It's computed from the data alone (on-time filers in rotation order, then late filers), because nothing records what was already posted. See `seasonOrder()` in `lib/posts.ts`.

@@ -1,6 +1,20 @@
 # Plan: phase 1, step 3 — Kwartaalseizoen
 
-*Written 27 October 2026. Status: **draft, waiting for Sam's OK**. No code written yet.*
+*Written 27 October 2026. Status: **built 27 October 2026.** Decisions are recorded in
+[decisions.md](decisions.md).*
+
+**Where the build differs from this plan:**
+- The post text is shorter than the draft below: "Wat kocht en verkocht …?" and headings without
+  the quarter. The lists shrink from three names to two or one when needed. The draft put 19 of
+  28 posts over 280.
+- `ingest.py` drops a comparison when the totals differ more than threefold (Ackman's Q1 2026 came
+  from a different filer). There's a new season routine in the handover.
+- No `kwartaalseizoenPost(date)`. Instead there's `seasonPosts(quarterEnd)` (all posts of a
+  season), `seasonDays(quarterEnd)` (its dates) and `latestSeasonPosts()` for the preview. Step 4
+  finds today's post with `seasonPosts(q).find((p) => p.date === today)`.
+- `topPositions` and `positionChanges` share one helper (`stockPositions`) and one matching key.
+- `companyNames` gained the names in the August example season, and `cleanIssuer` now strips
+  "Inc." and "Corp." with a full stop.
 
 This file is the starting point for a fresh session. Read it, then [TODO.md](../TODO.md),
 [decisions.md](decisions.md) and [build-log.md](build-log.md) (what steps 1 and 2 built).
@@ -111,7 +125,7 @@ already posted (no database; approving is posting). The rule:
 Day *k* of the season takes the *k*-th investor. Sam ingests on the morning of the first season
 day, so the on-time list is complete before the first post and doesn't shift afterwards. An
 amendment that adds or removes someone's only change can still shift the order; the approver will
-see it. *Assumed from the 27 Oct discussion. Confirm when reviewing this plan.*
+see it. *Confirmed by Sam, 27 Oct.*
 
 ### 4. The post text
 
@@ -190,11 +204,10 @@ the partners pick, through the shell.
 - Every season post is at or under 280 characters, including Nygren and Rogers (most positions)
   and the longest names.
 
-## Open questions for Sam
+## Answered 27 Oct
 
-1. **8 posts per season, so 8 of 30 investors.** Fine, or two investors per day (two posts at
-   15:00, or one post covering two)?
-2. **The order rule in §3.** Confirm, or prefer "most changes first".
+1. **8 posts per season, so 8 of 30 investors:** fine for now. Revisit later (TODO.md).
+2. **The order rule in §3:** confirmed, well-known names first.
 
 ## Gotchas
 

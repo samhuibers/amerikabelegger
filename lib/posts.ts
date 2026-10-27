@@ -1,4 +1,13 @@
-import { getPortfolio, investors, portfolioPeriod, topPositions } from "@/lib/content";
+import {
+  getLatestQuarter,
+  getPortfolio,
+  getPreviousPortfolio,
+  investors,
+  portfolioPeriod,
+  positionChanges,
+  topPositions,
+  type Portfolio,
+} from "@/lib/content";
 import { formatDate, formatQuarter, formatRoughShare, formatWeight } from "@/lib/format";
 
 /*
@@ -25,8 +34,8 @@ export const postTypes = {
   kwartaalseizoen: {
     label: "Kwartaalseizoen",
     accent: "brass",
-    slot: "15:00, in de twee weken na elke 13F-deadline",
-    status: "Volgende stap",
+    slot: "Maandag tot en met donderdag 15:00, twee weken na elke 13F-deadline",
+    status: "Kaart en tekst klaar",
   },
   "wall-street-gisteren": {
     label: "Wall Street gisteren",
@@ -37,25 +46,25 @@ export const postTypes = {
   giant: {
     label: "Giant van de week",
     accent: "giants",
-    slot: null,
+    slot: "Dinsdag 15:00",
     status: "Na de lancering; wacht op de bedrijventabel",
   },
   grower: {
     label: "Grower van de week",
     accent: "growers",
-    slot: null,
+    slot: "Woensdag 15:00",
     status: "Na de lancering; wacht op de bedrijventabel",
   },
   moonshot: {
     label: "Moonshot van de week",
     accent: "moonshots",
-    slot: null,
+    slot: "Donderdag 15:00",
     status: "Na de lancering; wacht op de bedrijventabel",
   },
   "week-vooruit": {
     label: "Week vooruit",
     accent: null,
-    slot: null,
+    slot: "Maandag 15:00",
     status: "Na de lancering; wacht op een kalender met kwartaalcijfers",
   },
   alert: {
@@ -110,6 +119,8 @@ export function xLength(text: string) {
 const DAY = 24 * 60 * 60 * 1000;
 const dayNumber = (iso: string) => Date.parse(`${iso}T00:00:00Z`) / DAY;
 const isoDay = (day: number) => new Date(day * DAY).toISOString().slice(0, 10);
+const weekday = (day: number) => new Date(day * DAY).getUTCDay();
+const THURSDAY = 4;
 const FRIDAY = 5;
 
 /**
@@ -168,7 +179,7 @@ const roster = new Set(investors.map((investor) => investor.slug));
 if (rotation.length !== roster.size || new Set(rotation).size !== rotation.length || !rotation.every((slug) => roster.has(slug))) {
   throw new Error("De rotatie in lib/posts.ts moet elke slug uit `investors` precies één keer bevatten.");
 }
-if (new Date(dayNumber(ROTATION_START) * DAY).getUTCDay() !== FRIDAY) {
+if (weekday(dayNumber(ROTATION_START)) !== FRIDAY) {
   throw new Error("ROTATION_START in lib/posts.ts moet een vrijdag zijn.");
 }
 
@@ -227,6 +238,125 @@ export async function topbeleggerPost(date: string): Promise<Post> {
 /** De eerstvolgende `count` posts vanaf `from` (zelf meegeteld). Voorlopig alleen de vrijdagse Topbelegger. */
 export function upcomingPosts(from: string, count: number) {
   let day = Math.max(dayNumber(from), dayNumber(ROTATION_START));
-  day += (FRIDAY - new Date(day * DAY).getUTCDay() + 7) % 7;
+  day += (FRIDAY - weekday(day) + 7) % 7;
   return Promise.all(Array.from({ length: count }, (_, i) => topbeleggerPost(isoDay(day + 7 * i))));
+}
+
+/*
+ * Kwartaalseizoen: vier keer per jaar neemt "Wat kochten en verkochten de
+ * topbeleggers?" twee weken lang de 15:00-posts van maandag tot en met
+ * donderdag over. Vrijdag blijft Topbelegger van de week.
+ */
+
+/**
+ * De 13F-deadline voor het kwartaal dat op `quarterEnd` eindigt: 45 dagen
+ * later, en valt dat in een weekend of op Presidents' Day (de derde maandag
+ * van februari), dan de eerstvolgende werkdag. Andere Amerikaanse feestdagen
+ * vallen nooit op een 13F-deadline.
+ */
+function filingDeadline(quarterEnd: string) {
+  const isPresidentsDay = (day: number) => {
+    const date = new Date(day * DAY);
+    return date.getUTCMonth() === 1 && weekday(day) === 1 && date.getUTCDate() >= 15 && date.getUTCDate() <= 21;
+  };
+  let day = dayNumber(quarterEnd) + 45;
+  while (weekday(day) === 0 || weekday(day) === 6 || isPresidentsDay(day)) day++;
+  return day;
+}
+
+/** De postdagen van een seizoen: maandag tot en met donderdag in de tien werkdagen na de deadline. */
+export function seasonDays(quarterEnd: string) {
+  const days = [];
+  let day = filingDeadline(quarterEnd);
+  for (let weekdays = 0; weekdays < 10; ) {
+    day++;
+    if (weekday(day) === 0 || weekday(day) === 6) continue;
+    weekdays++;
+    if (weekday(day) <= THURSDAY) days.push(isoDay(day));
+  }
+  return days;
+}
+
+/*
+ * Wie op welke dag: er wordt niets opgeslagen over wat al geplaatst is, dus de
+ * volgorde volgt alleen uit de data. Eerst wie op tijd indiende, in de volgorde
+ * van de rotatie (bekende namen eerst); daarna de laatkomers, op indieningsdatum.
+ * Wie niets nieuws kocht en niets helemaal verkocht, heeft geen nieuws.
+ */
+async function seasonOrder(quarterEnd: string) {
+  const deadline = filingDeadline(quarterEnd);
+  const candidates = [];
+  for (const slug of rotation) {
+    const latest = await getPortfolio(slug);
+    const previous = await getPreviousPortfolio(slug);
+    if (!latest || !previous || latest.period !== quarterEnd) continue;
+    const changes = positionChanges(latest, previous);
+    if (changes.added.length || changes.sold.length) {
+      candidates.push({ slug, latest, changes, late: dayNumber(latest.filed) > deadline });
+    }
+  }
+  const late = candidates.filter((c) => c.late).sort((a, b) => a.latest.filed.localeCompare(b.latest.filed));
+  return [...candidates.filter((c) => !c.late), ...late];
+}
+
+/** De eerste `count`, en de rest als aantal. */
+function shortList<T>(items: T[], count: number, line: (item: T) => string) {
+  const rest = items.length - count;
+  return [...items.slice(0, count).map(line), ...(rest > 0 ? [`en nog ${rest} kleinere`] : [])];
+}
+
+/*
+ * De tekst met zoveel mogelijk namen: drie per lijst, anders twee, anders één,
+ * telkens eerst met cashtags. Een korte post houdt alles, een lange levert het
+ * minst belangrijke het eerst in. De kaart toont altijd drie per lijst.
+ */
+function seasonText(
+  name: string,
+  firm: string,
+  latest: Portfolio,
+  changes: ReturnType<typeof positionChanges>,
+) {
+  const period = portfolioPeriod(latest);
+  let text = "";
+  for (const count of [3, 2, 1]) {
+    text = [
+      `Wat kocht en verkocht ${name} (${firm})?`,
+      ...(changes.added.length
+        ? ["", "Nieuw:", ...shortList(changes.added, count, (p) => `${p.name} ${formatWeight(p.weight)}`)]
+        : []),
+      ...(changes.sold.length ? ["", "Helemaal verkocht:", ...shortList(changes.sold, count, (p) => p.name)] : []),
+      "",
+      `Bron: 13F over ${formatQuarter(period.quarter, period.year)}, ingediend bij de SEC op ${formatDate(period.filed)}.`,
+    ].join("\n");
+    const shown = [...changes.added.slice(0, count), ...changes.sold.slice(0, count)];
+    const cashtags = shown.flatMap((position) => (position.ticker ? [`$${position.ticker}`] : []));
+    const withCashtags = `${text}\n\n${cashtags.join(" ")}`;
+    if (cashtags.length && xLength(withCashtags) <= X_LIMIT) return withCashtags;
+    if (xLength(text) <= X_LIMIT) return text;
+  }
+  // Ook met één naam per lijst te lang: de voorvertoning toont het.
+  return text;
+}
+
+/** De posts van het seizoen na het kwartaal dat op `quarterEnd` eindigt, één per postdag. */
+export async function seasonPosts(quarterEnd: string): Promise<Post[]> {
+  const order = await seasonOrder(quarterEnd);
+  return seasonDays(quarterEnd)
+    .slice(0, order.length)
+    .map((date, i) => {
+      const { slug, latest, changes } = order[i];
+      const investor = investors.find((inv) => inv.slug === slug)!;
+      return {
+        type: "kwartaalseizoen",
+        date,
+        text: seasonText(investor.name, investor.firm, latest, changes),
+        card: `/kaart/kwartaalseizoen/${slug}`,
+      };
+    });
+}
+
+/** Het seizoen van het nieuwste kwartaal in de data: wat de voorvertoning toont. */
+export async function latestSeasonPosts() {
+  const { year, quarter } = await getLatestQuarter();
+  return seasonPosts(`${year}-${["03-31", "06-30", "09-30", "12-31"][quarter - 1]}`);
 }

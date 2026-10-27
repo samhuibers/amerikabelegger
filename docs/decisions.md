@@ -167,3 +167,36 @@ $UBER $BN $MSFT
 **Chose:** positions that are new this quarter or fully sold.
 **Instead of:** also "bijgekocht" and "afgebouwd".
 **Why:** those compare share counts, and a stock split looks exactly like a large purchase. Without split data that would say something false. Comparing weights instead mixes trading with price moves. New and sold are plain yes/no facts.
+
+## 2026-10-27: Kwartaalseizoen post text and order
+**Chose:**
+```
+Wat kocht en verkocht Howard Marks (Oaktree Capital Management)?
+
+Nieuw:
+Sea Limited 1,6%
+Viasat 1,5%
+MakeMyTrip 1,4%
+en nog 7 kleinere
+
+Helemaal verkocht:
+Petrobras
+Nokia
+CBL & Associates
+en nog 8 kleinere
+
+Bron: 13F over Q2 2026, ingediend bij de SEC op 14 augustus 2026.
+```
+- Three names per list. If the post goes over 280, it tries two, then one, each time with cashtags first. The card always shows three.
+- **Order:** on-time filers with at least one change, in rotation order (well-known names first, confirmed by Sam), then late filers by filing date. It follows from the data alone, because nothing records what was posted.
+**Instead of:** the plan's draft opening "Wat kochten en verkochten de topbeleggers? Vandaag: …" with the quarter in each heading. That came to 19 of 28 posts over 280.
+
+## 2026-10-27: Two quarters only count as comparable when their totals are within a factor of three
+**Chose:** `ingest.py` stores `previous: null` and prints SKIPPED when the totals differ more than threefold.
+**Instead of:** a special case for Ackman, or a list of former filer CIKs per investor.
+**Why:** Pershing Square Inc. (the CIK we follow) filed only its Howard Hughes stake for Q1 2026 ($569M), while Pershing Square Capital Management filed the rest. Comparing them would have reported 13 positions Ackman already held as "nieuw". The rule also catches the next filer reorganisation. Across all 30, the next-largest change from Q1 to Q2 was Loeb at 2.25×.
+
+## 2026-10-27: Changes are matched on company name, then ticker, then CUSIP
+**Chose:** the key from `companyNames` (so share classes are one company), otherwise the ticker, otherwise the CUSIP. `topPositions` uses the same key, so the cards are unchanged.
+**Instead of:** the cleaned issuer name, which a filer can spell differently from one quarter to the next.
+**Watch for:** a different security of a company already held, like Alphabet's preferred depositary shares (GOOGM/GOOGN) next to its common stock. It needs its own name in `companyNames` ("Alphabet (preferent)"), or the post says the company is new.

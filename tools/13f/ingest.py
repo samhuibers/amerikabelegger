@@ -1,5 +1,9 @@
 """
-Pulls each topbelegger's latest 13F-HR from SEC EDGAR into data/13f.json.
+Pulls each topbelegger's latest 13F-HR from SEC EDGAR into data/13f.json, and
+the one for the quarter before it, so Kwartaalseizoen can show what changed:
+{slug: {"latest": portfolio, "previous": portfolio or null}}. `previous` is
+always the quarter right before `latest`; an investor who skipped that quarter
+gets null rather than a comparison across six months.
 
 Run by hand once a quarter, the day after the 13F deadline — 45 days after
 quarter end, so around 15 Feb, 16 May, 15 Aug and 15 Nov — and again whenever
@@ -45,6 +49,12 @@ OUT = ROOT / "data" / "13f.json"
 # Filers round the cover-page total; a gap bigger than this means the holdings
 # were read wrong, not rounded.
 TOTAL_TOLERANCE = 0.001
+
+# Two quarters whose totals differ more than this don't cover the same
+# portfolio: Pershing Square Inc. filed only its Howard Hughes stake for Q1 2026
+# ($ 569M), while Pershing Square Capital Management filed the rest. Comparing
+# them would report every position as bought. No fund here triples in a quarter.
+COMPARABLE_FACTOR = 3
 
 SEC_TICKERS = "https://www.sec.gov/files/company_tickers.json"
 OPENFIGI = "https://api.openfigi.com/v3/mapping"
@@ -101,21 +111,33 @@ def expected_period(today):
     return max(end for end in ends if end + timedelta(days=45) < today).isoformat()
 
 
-def choose_filing(cik):
-    """
-    The report for the latest period: a RESTATEMENT amendment replaces the
-    original; a NEW HOLDINGS amendment would have to be merged with it, which
-    v1 doesn't do — it is reported instead.
-    """
+def quarter_before(period):
+    """2026-06-30 → 2026-03-31: the day before the first of two months earlier."""
+    end = date.fromisoformat(period)
+    return (date(end.year, end.month - 2, 1) - timedelta(days=1)).isoformat()
+
+
+def load_filings(cik):
     filings = Company(cik).get_filings(form="13F-HR", trigger_full_load=False)
     if len(filings) == 0:
         raise ValueError("no 13F-HR on file (only 13F-NT, or the wrong CIK?)")
+    return filings
 
-    period = max(f.report_date for f in filings)
+
+def choose_filing(filings, period=None):
+    """
+    The report for `period`, or for the latest period when none is given; None
+    when nothing was filed for it. A RESTATEMENT amendment replaces the
+    original; a NEW HOLDINGS amendment would have to be merged with it, which
+    v1 doesn't do — it is reported instead.
+    """
+    period = period or max(str(f.report_date) for f in filings)
     in_period = sorted(
-        (f for f in filings if f.report_date == period),
+        (f for f in filings if str(f.report_date) == period),
         key=lambda f: (f.filing_date, f.accession_no),
     )
+    if not in_period:
+        return None, []
 
     chosen, notes = None, []
     for filing in in_period:
@@ -262,13 +284,32 @@ def main():
     for investor in roster:
         slug, cik = investor["slug"], investor["cik"]
         old = previous.get(slug)
+        # A filing already stored is reused as is, also when last quarter's
+        # `latest` becomes this quarter's `previous`.
+        stored = {p["accession"]: p for p in (old or {}).values() if p}
+
+        def portfolio_for(report):
+            if report.accession_number in stored:
+                return stored[report.accession_number], "unchanged"
+            return to_portfolio(cik, report), "new"
+
         try:
-            report, notes = choose_filing(cik)
-            if old and old["accession"] == report.accession_number:
-                output[slug], status = old, "unchanged"
-            else:
-                output[slug], status = to_portfolio(cik, report), "new"
-            p = output[slug]
+            filings = load_filings(cik)
+            report, notes = choose_filing(filings)
+            latest, status = portfolio_for(report)
+            prior, prior_notes = choose_filing(filings, quarter_before(latest["period"]))
+            earlier, prior_status = portfolio_for(prior) if prior else (None, "none")
+            if earlier:
+                ratio = latest["totalValue"] / max(earlier["totalValue"], 1)
+                if not 1 / COMPARABLE_FACTOR <= ratio <= COMPARABLE_FACTOR:
+                    prior_status = (
+                        f"SKIPPED, $ {earlier['totalValue'] / 1e6:,.0f}M then and "
+                        f"$ {latest['totalValue'] / 1e6:,.0f}M now: not the same portfolio?"
+                    )
+                    earlier = None
+            output[slug] = {"latest": latest, "previous": earlier}
+
+            p = latest
             if p["period"] < expected:
                 status = f"STALE (expected {expected})"
             print(
@@ -276,7 +317,8 @@ def main():
                 f"filed {p['filed']}  {len(p['holdings']):>4} rows  "
                 f"$ {p['totalValue'] / 1e6:>10,.0f}M"
             )
-            for note in notes:
+            print(f"{'':<10} {slug:<22} previous {quarter_before(p['period'])}: {prior_status}")
+            for note in notes + prior_notes:
                 print(f"{'':<10} {slug:<22} ! {note}")
         except Exception as error:
             failed = True
