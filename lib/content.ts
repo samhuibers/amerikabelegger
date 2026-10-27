@@ -240,6 +240,27 @@ export async function getPortfolio(slug: string): Promise<Portfolio | null> {
   return (await portfolios())[slug] ?? null;
 }
 
+/**
+ * Een ISO-datum uit de data ("2026-06-30") als `new Date(y, m, d)`. Nooit
+ * `new Date("2026-06-30")`: dat is UTC-middernacht en kan een dag verschuiven.
+ */
+export function isoDate(iso: string) {
+  const [year, month, day] = iso.split("-").map(Number);
+  return new Date(year, month - 1, day);
+}
+
+/** Kwartaal en data van een 13F, voor de kaart, de posttekst en de profielpagina. */
+export function portfolioPeriod(portfolio: Portfolio) {
+  const end = isoDate(portfolio.period);
+  return {
+    year: end.getFullYear(),
+    quarter: Math.ceil((end.getMonth() + 1) / 3),
+    /** Het kwartaaleinde: de dag waarop de posities gelden. */
+    end,
+    filed: isoDate(portfolio.filed),
+  };
+}
+
 /*
  * Leesbare bedrijfsnamen, op ticker. De ticker en niet de ingediende naam is de
  * sleutel: één bedrijf heet in de filings van verschillende indieners anders
@@ -396,16 +417,21 @@ export function companyName(holding: Holding) {
  * Samengevoegd wordt alleen op een naam uit `companyNames`, niet op de eerste
  * zes tekens van de CUSIP (de uitgever): onder één iShares- of Vanguard-code
  * vallen tientallen verschillende fondsen.
+ *
+ * `ticker` is die van de grootste klasse (de cashtag in een post), en `null`
+ * bij een notering buiten de VS of een onbekende ticker.
  */
 export function topPositions(portfolio: Portfolio, count: number) {
-  const stocks = portfolio.holdings.filter((h) => h.shareType === "SH" && !h.putCall);
+  const stocks = portfolio.holdings
+    .filter((h) => h.shareType === "SH" && !h.putCall)
+    .sort((a, b) => b.value - a.value);
   const total = stocks.reduce((sum, h) => sum + h.value, 0);
 
-  const merged = new Map<string, { name: string; value: number }>();
+  const merged = new Map<string, { name: string; value: number; ticker: string | null }>();
   for (const h of stocks) {
     const known = h.ticker ? companyNames[h.ticker] : undefined;
     const key = known ?? h.cusip;
-    const entry = merged.get(key) ?? { name: companyName(h), value: 0 };
+    const entry = merged.get(key) ?? { name: companyName(h), value: 0, ticker: h.exchange ? null : h.ticker };
     entry.value += h.value;
     merged.set(key, entry);
   }
@@ -413,7 +439,7 @@ export function topPositions(portfolio: Portfolio, count: number) {
   return [...merged.values()]
     .sort((a, b) => b.value - a.value)
     .slice(0, count)
-    .map(({ name, value }) => ({ name, weight: (value / total) * 100 }));
+    .map(({ name, value, ticker }) => ({ name, weight: (value / total) * 100, ticker }));
 }
 
 /** Het kwartaal van de meest recente 13F in de data. */

@@ -21,3 +21,13 @@ Terms that come up in this project, explained plainly.
 **Kerning.** Small spacing corrections between particular letter pairs ("Av", "To"). The card engine measures words without them and draws with them, which left gaps after long words. `keepTogether` in `app/kaart/shell.tsx` works around it.
 
 **Non-breaking space (`\u00a0`).** A space that looks normal but doesn't allow a line break. On the cards it makes the engine measure a whole line at once, which fixes the spacing.
+
+**Post type / card design.** Our two words for two different things. A *post type* is a kind of post (Topbelegger van de week, Wall Street gisteren). The *card design* is how every card looks. Post types are listed in `postTypes` in `lib/posts.ts`; the design lives in `app/kaart/shell.tsx`.
+
+**Cashtag.** A ticker with a dollar sign (`$UBER`) in a post. X makes it clickable and groups posts per stock, so it helps people find us. It isn't a link, so it shouldn't cost the $0.20 link price (still to confirm on the first real post).
+
+**Dynamic rendering.** The opposite of prerendering: the server builds the page on every visit (ƒ in the build output). `/voorvertoning` needs this because it depends on today's date. In the code, `await connection()` asks for it.
+
+**Weighted character count.** X doesn't count every character as 1. Latin letters and normal punctuation count 1, emoji and many special characters 2. `xLength()` in `lib/posts.ts` counts the way X does.
+
+**noindex.** An instruction in a page's metadata that asks search engines not to list the page. Used on `/voorvertoning`.

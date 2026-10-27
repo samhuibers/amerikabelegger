@@ -1,6 +1,18 @@
 # Plan: phase 1, step 2 — post text and the preview page
 
-*Written 27 October 2026. Status: **draft, waiting for Sam's OK**. No code written yet.*
+*Written 27 October 2026. Status: **built 27 October 2026.** The open questions were answered
+and are recorded in [decisions.md](decisions.md).*
+
+**Where the build differs from this plan:**
+- `postTypes` in `lib/posts.ts` lists all eight post types, and the preview groups by type, with
+  blank cards (`/kaart/leeg/[type]`) for the unbuilt ones. `Post.format` became `Post.type`.
+- `renderCard()` takes a colour name (`"brass"`), not a hex value.
+- `topbeleggerPost(date)` picks the investor itself from the rotation. `upcomingPosts(from, count)`
+  replaces `postsBetween`.
+- The text template is shorter than the draft below, because the draft came to 266–322
+  characters. The final template is in decisions.md.
+- `portfolioPeriod()` also returns the filing date, and `isoDate()` is exported for the preview.
+  `topPositions()` now returns each position's ticker for the cashtags.
 
 This file is the starting point for a fresh session. Read it, then
 [TODO.md](../TODO.md) and [decisions.md](decisions.md). CLAUDE.md and AGENTS.md apply as

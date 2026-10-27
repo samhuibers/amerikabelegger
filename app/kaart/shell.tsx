@@ -68,14 +68,14 @@ export async function renderCard({
   accent,
   children,
 }: {
-  /** Het format, in de band: "Topbelegger van de week". */
+  /** Het posttype, in de band: "Topbelegger van de week". */
   label: string;
   /** Rechts in de band, uit de data: "Q2 2026". */
   meta: string;
   /** De datalijn in de footer: waar de cijfers vandaan komen en van wanneer. */
   source: string;
-  /** De kleur van het format, voor de skyline op de achtergrond. */
-  accent: string;
+  /** De kleur van het posttype (uit `postTypes` in lib/posts.ts), voor de skyline op de achtergrond. */
+  accent: keyof typeof tokens;
   /** Het datablok. */
   children: React.ReactNode;
 }) {
@@ -96,7 +96,7 @@ export async function renderCard({
         }}
       >
         {/* Eerst, zodat band, datablok en footer eroverheen getekend worden. */}
-        <Backdrop color={accent} up={tokens.up} down={tokens.down} />
+        <Backdrop color={tokens[accent]} up={tokens.up} down={tokens.down} />
 
         <div
           style={{

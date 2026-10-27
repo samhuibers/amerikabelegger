@@ -117,3 +117,42 @@ All three are written into the style guide as card-only exceptions.
 **Chose:** @amerikabelegger, secured by Sam on a newly created account. That account becomes the brand account (shared team email, 2FA) rather than being renamed.
 **Instead of:** renaming it and claiming the handle again on a fresh brand account.
 **Why:** renaming frees the handle, and anyone could take it before the new account claims it.
+
+## 2026-10-27: One catalogue of post types, in code
+**Chose:** `postTypes` in `lib/posts.ts` lists all eight post types with their band label, colour, slot and status. The card routes and `/voorvertoning` read from it. The look of every card stays in one place, `renderCard()` in `app/kaart/shell.tsx`, so the card design the team picks applies to all types at once. Types that aren't built yet get a blank card (`/kaart/leeg/[type]`) in the preview.
+**Instead of:** a document (`docs/post-types.md` or a shared Google Doc) describing each post type.
+**Why:** a document describes what we intend to post, the code what we actually post, and the two drift apart. The preview page is the readable view for the team, and it's generated from the same table, so it can't drift.
+**Vocabulary:** *post type* is Topbelegger, Kwartaalseizoen and so on. *Card design* is the look (the ten variants the team is comparing).
+**Also:** `Post` and `postTypes` live in `lib/posts.ts`, not `lib/content.ts`. A post isn't stored content but something computed from it. CLAUDE.md's "types live in lib/content.ts" covers stored content.
+
+## 2026-10-27: Topbelegger post text
+**Chose:** a fixed template, every number from the data:
+```
+Topbelegger van de week: Bill Ackman (Pershing Square).
+
+Top 3 van 14 aandelenposities (samen 37%):
+Uber 12,7%
+Brookfield 12,6%
+Microsoft 11,9%
+
+Bron: 13F over Q2 2026, ingediend bij de SEC op 14 augustus 2026.
+
+$UBER $BN $MSFT
+```
+- Three opening lines, picked by week number so consecutive weeks differ. With 30 investors, each investor always gets the same one.
+- Cashtags yes. When a post would go over 280 characters, it drops them (the only optional part).
+- No disclaimer in the post. "Geen beleggingsadvies" goes in the X bio.
+- No emoji, no links, no pronouns for investors.
+- The position count matches the profile page (every share class counts). The top three merge share classes, like the card.
+**Instead of:** the plan's draft, which had a separate "Samen 37% van een portefeuille van 14 aandelen" line and a longer opening. That came to 266–322 characters. Now it's 204–276.
+**Why:** X's limit is 280. The source line stays complete, because "De bron staat erbij" is the promise.
+
+## 2026-10-27: Topbelegger rotation
+**Chose:** a hand-ordered list in `lib/posts.ts`, starting Friday 13 Nov 2026 (likely, subject to change). Well-known names first, never the same style group two weeks running. A check stops the build if the list doesn't hold every investor exactly once.
+**Instead of:** an automatic interleave by style group.
+**Why:** one readable list that the team can reorder by hand. The order is Claude's draft.
+
+## 2026-10-27: The preview page is unlinked and noindex
+**Chose:** `/voorvertoning`, rendered on every visit, not linked from the site, with `robots: noindex`.
+**Instead of:** a password (environment variables and a `proxy.ts`).
+**Why:** it shows only public 13F data. The real approval happens in Telegram.

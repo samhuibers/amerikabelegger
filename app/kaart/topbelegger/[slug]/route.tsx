@@ -1,6 +1,7 @@
 import { keepTogether, renderCard, tokens } from "@/app/kaart/shell";
-import { getPortfolio, investors, styleGroups, topPositions } from "@/lib/content";
+import { getPortfolio, investors, portfolioPeriod, styleGroups, topPositions } from "@/lib/content";
 import { formatDate, formatQuarter, formatWeight } from "@/lib/format";
+import { postTypes } from "@/lib/posts";
 
 /*
  * De kaart voor "Topbelegger van de week", als PNG op /kaart/topbelegger/[slug].
@@ -20,9 +21,8 @@ export async function GET(_request: Request, { params }: RouteContext<"/kaart/to
   if (!investor || !portfolio) return new Response("Niet gevonden", { status: 404 });
 
   const style = styleGroups.find((g) => g.slug === investor.styleGroup)!.label;
-  // Een datum als `new Date(y, m, d)`: een ISO-string wordt UTC-middernacht en kan een dag verschuiven.
-  const [year, month, day] = portfolio.period.split("-").map(Number);
-  const quarter = formatQuarter(Math.ceil(month / 3), year);
+  const period = portfolioPeriod(portfolio);
+  const quarter = formatQuarter(period.quarter, period.year);
   // Bodoni op 150px is tot zo'n 85px per letter breed (m, o). Een woord van acht
   // letters of meer ("Cooperman") past dan niet in de kolom en loopt onder het
   // positievlak door, dus de naam wordt kleiner naarmate het langste woord langer is.
@@ -30,10 +30,10 @@ export async function GET(_request: Request, { params }: RouteContext<"/kaart/to
   const nameSize = Math.min(150, Math.floor(1080 / longestWord));
 
   return renderCard({
-    label: "Topbelegger van de week",
+    label: postTypes.topbelegger.label,
     meta: quarter,
-    accent: tokens.brass,
-    source: `13F over ${quarter} · portefeuille per ${formatDate(new Date(year, month - 1, day))}`,
+    accent: postTypes.topbelegger.accent,
+    source: `13F over ${quarter} · portefeuille per ${formatDate(period.end)}`,
     children: (
       <div style={{ display: "flex", width: "100%", justifyContent: "space-between", alignItems: "center" }}>
         <div style={{ display: "flex", flexDirection: "column", width: 660 }}>

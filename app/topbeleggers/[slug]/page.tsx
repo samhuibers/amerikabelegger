@@ -3,6 +3,7 @@ import { Masthead } from "@/components/masthead";
 import {
   getPortfolio,
   investors,
+  portfolioPeriod,
   thirteenF,
   type Holding,
   type Portfolio,
@@ -89,12 +90,8 @@ function PortfolioSection({ portfolio }: { portfolio: Portfolio }) {
     .sort(byValue)
     .map((h, i) => ({ ...h, rank: i + 1, weight: (h.value / stockTotal) * 100 }));
 
-  const [year, month, day] = portfolio.filed.split("-").map(Number);
-  const periodMonth = Number(portfolio.period.split("-")[1]);
-  const quarter = formatQuarter(
-    Math.ceil(periodMonth / 3),
-    Number(portfolio.period.slice(0, 4)),
-  );
+  const period = portfolioPeriod(portfolio);
+  const quarter = formatQuarter(period.quarter, period.year);
   const secUrl =
     "https://www.sec.gov/Archives/edgar/data/" +
     `${Number(portfolio.cik)}/${portfolio.accession.replaceAll("-", "")}/`;
@@ -106,10 +103,9 @@ function PortfolioSection({ portfolio }: { portfolio: Portfolio }) {
       </h2>
       <div className="scotch-rule mt-4 max-w-reading" />
 
-      {/* Een datum als `new Date(y, m, d)`: een ISO-string wordt UTC-middernacht en kan buiten Europa een dag verschuiven. */}
       <p className="mt-5 max-w-reading text-body-s text-ink-soft">
         13F over {quarter}, ingediend bij de SEC op{" "}
-        {formatDate(new Date(year, month - 1, day))}.{" "}
+        {formatDate(period.filed)}.{" "}
         <a
           href={secUrl}
           className="underline underline-offset-4 hover:text-seal"
