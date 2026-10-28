@@ -37,3 +37,13 @@ Terms that come up in this project, explained plainly.
 **Depositary share.** A share that stands for a fraction of another security, here 1/20 of an Alphabet preferred share (GOOGM, GOOGN). It's a different security from the common stock, so it gets its own name in `companyNames`.
 
 **Kwartaalseizoen order.** Which investor gets which season day. It's computed from the data alone (on-time filers in rotation order, then late filers), because nothing records what was already posted. See `seasonOrder()` in `lib/posts.ts`.
+
+**Environment variable.** A named setting that lives on the server, not in the code, read as `process.env.NAME`. Secrets (keys, tokens) live only there: in Vercel's settings and, locally, in `.env.local`, which git ignores. Without the `NEXT_PUBLIC_` prefix they never reach the browser.
+
+**OAuth 1.0a.** The way our code proves to X that it may post as @amerikabelegger. Every request is signed with four keys, and the signature (`lib/x.ts`) proves we hold the secrets without sending them. These keys don't expire.
+
+**Callback query.** What Telegram sends when someone taps a button under a bot's message. It carries the button's hidden data (`plaats|topbelegger|2026-11-13|a9a1f280`), who tapped, and which message it was.
+
+**Fingerprint (hash).** A short code computed from a piece of data, which changes when the data changes. `postFingerprint` makes 8 characters from a post. If the post computed at the tap gives a different fingerprint than the one in the button, the text changed since the proposal.
+
+**Idempotent.** Doing it twice has the same effect as doing it once. Cron jobs and webhooks can arrive twice, so posting must never happen twice; the button lock and X's duplicate check make sure of that.

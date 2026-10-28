@@ -1,3 +1,4 @@
+import { createHash } from "node:crypto";
 import {
   getLatestQuarter,
   getPortfolio,
@@ -355,8 +356,41 @@ export async function seasonPosts(quarterEnd: string): Promise<Post[]> {
     });
 }
 
+const QUARTER_ENDS = ["03-31", "06-30", "09-30", "12-31"];
+
 /** Het seizoen van het nieuwste kwartaal in de data: wat de voorvertoning toont. */
 export async function latestSeasonPosts() {
   const { year, quarter } = await getLatestQuarter();
-  return seasonPosts(`${year}-${["03-31", "06-30", "09-30", "12-31"][quarter - 1]}`);
+  return seasonPosts(`${year}-${QUARTER_ENDS[quarter - 1]}`);
+}
+
+/*
+ * Welke post op een dag uitgaat. Er wordt niets opgeslagen tussen voorstel en
+ * goedkeuring: de knop in Telegram draagt type, datum en vingerafdruk, en bij
+ * de tik rekent `postFor` dezelfde post opnieuw uit.
+ */
+
+/** De post van `type` op `date`, of `null` als dat type die dag niets heeft. */
+export async function postFor(type: string, date: string): Promise<Post | null> {
+  if (type === "topbelegger") {
+    return weekday(dayNumber(date)) === FRIDAY && date >= ROTATION_START ? topbeleggerPost(date) : null;
+  }
+  if (type === "kwartaalseizoen") {
+    const year = Number(date.slice(0, 4));
+    const quarterEnd = [year - 1, year]
+      .flatMap((y) => QUARTER_ENDS.map((end) => `${y}-${end}`))
+      .find((end) => seasonDays(end).includes(date));
+    return quarterEnd ? ((await seasonPosts(quarterEnd)).find((post) => post.date === date) ?? null) : null;
+  }
+  return null;
+}
+
+/** De post van 15:00 op `date`: in een seizoen Kwartaalseizoen (ma–do), op vrijdag Topbelegger. */
+export async function todaysPost(date: string) {
+  return (await postFor("kwartaalseizoen", date)) ?? (await postFor("topbelegger", date));
+}
+
+/** Acht tekens die veranderen zodra tekst, kaart, type of datum verandert. */
+export function postFingerprint(post: Post) {
+  return createHash("sha256").update(JSON.stringify(post)).digest("hex").slice(0, 8);
 }

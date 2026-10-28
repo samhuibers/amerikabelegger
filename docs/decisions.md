@@ -200,3 +200,22 @@ Bron: 13F over Q2 2026, ingediend bij de SEC op 14 augustus 2026.
 **Chose:** the key from `companyNames` (so share classes are one company), otherwise the ticker, otherwise the CUSIP. `topPositions` uses the same key, so the cards are unchanged.
 **Instead of:** the cleaned issuer name, which a filer can spell differently from one quarter to the next.
 **Watch for:** a different security of a company already held, like Alphabet's preferred depositary shares (GOOGM/GOOGN) next to its common stock. It needs its own name in `companyNames` ("Alphabet (preferent)"), or the post says the company is new.
+
+## 2026-10-27: What we told X in the developer use-case description
+**Chose:** describe phase 1 exactly (posting from our own account, with a human approving each post, and reading no one else's data), plus one sentence that phase 2 may read public posts from a fixed list of US finance commentators, and that we'll update the description before building it.
+**Instead of:** describing phase 2 in full now, or leaving it out.
+**Why:** the description must match what we actually do. Phase 2 isn't designed yet, but the absolute "we read nothing" would otherwise silently become false.
+
+## 2026-10-27: How approval and posting work (step 4)
+**Chose:**
+- **The trigger:** one Vercel cron job at `0 12 * * 1-5` (UTC). On Hobby it fires within that hour, so the proposal arrives 13:00–15:00 in Amsterdam, summer and winter.
+- **Stateless approval:** the button carries type, date and an 8-character fingerprint (SHA-256) of the post. On a tap the post is computed again and only posted if it's today's and unchanged.
+- **Never twice:** the bot removes the buttons before posting, so a second tap finds none. X also refuses identical posts.
+- **Four checks:** `CRON_SECRET`, Telegram's `secret_token` header, the group ID, and the approver list.
+- **Our own small clients, no dependency:** `lib/x.ts` (OAuth 1.0a, tested against X's worked example in `lib/x.test.mjs`) and `lib/telegram.ts` (plain fetch).
+**Instead of:**
+- a database holding pending proposals;
+- OAuth 2.0, whose tokens expire every two hours and would need storage;
+- `@xdevplatform/xdk` (no documented media upload) or `twitter-api-v2` (uploads through the older v1.1 endpoint);
+- Vercel Pro for exact timing.
+**Why:** no database, nothing that can drift between preview and post, and every line is readable.

@@ -86,3 +86,38 @@ Each morning of the season:
 - **NEW HOLDINGS amendments aren't merged.** Such an amendment adds positions that were previously confidential. The script reports it and skips it, which is rare enough for now.
 - **The holdings JSON sits in an unused client chunk.** `components/site-header.tsx` is a client component that imports `lib/content.ts`, so the build emits the JSON as a lazy chunk. No page loads it, but the file is deployed. It's public SEC data, so it's harmless.
 - **Lint:** the only warning, an unused `Team` in `app/over-ons/page.tsx`, came before this work.
+
+## Posting to X (since step 4, 27 Oct 2026)
+
+**How it runs:**
+1. Every weekday a Vercel cron job (`vercel.json`) calls `/api/voorstel` between 12:00 and 12:59 UTC, which is 13:00–15:00 in Amsterdam.
+2. If there's a post today (`todaysPost` in `lib/posts.ts`), it goes to the Telegram group "Amerikabelegger beheer" as a proposal, with "Plaats" and "Overslaan" buttons.
+3. A tap calls `/api/telegram` (the webhook). "Plaats" uploads the card to X and posts it, then the Telegram message says who posted it and when, with a link.
+
+**Environment variables** (Vercel → Settings → Environment Variables, Production; locally in `.env.local`, which git ignores):
+- `CRON_SECRET`, `TELEGRAM_WEBHOOK_SECRET`: random strings. Make one with `openssl rand -hex 24`.
+- `TELEGRAM_BOT_TOKEN`: from BotFather.
+- `TELEGRAM_CHAT_ID`: the group, a negative number.
+- `TELEGRAM_APPROVERS`: Telegram user IDs, comma-separated.
+- `X_API_KEY`, `X_API_SECRET`, `X_ACCESS_TOKEN`, `X_ACCESS_TOKEN_SECRET`: from the X developer portal, generated with "Read and write" permissions.
+
+A changed variable only takes effect after a redeploy.
+
+**Register the webhook once**, and again whenever the address or `TELEGRAM_WEBHOOK_SECRET` changes:
+```
+set -a; source .env.local; set +a
+curl "https://api.telegram.org/bot$TELEGRAM_BOT_TOKEN/setWebhook" -d "url=https://amerikabelegger.vercel.app/api/telegram" -d "secret_token=$TELEGRAM_WEBHOOK_SECRET" -d 'allowed_updates=["callback_query"]'
+```
+The first line loads `.env.local` into the terminal session, so the secrets don't end up typed in your shell history.
+
+**No proposal today?** The cron is "best effort" and isn't retried. Send it by hand:
+```
+curl -H "Authorization: Bearer $CRON_SECRET" https://amerikabelegger.vercel.app/api/voorstel
+```
+Add `?datum=2026-11-13` for another day's proposal, to test. Posting it is refused, because the webhook only posts proposals for today.
+
+**What the messages mean:**
+- *"Dit voorstel is al afgehandeld"*: someone else tapped first.
+- *"de post is veranderd sinds dit voorstel"*: the data changed after the proposal (for example a morning ingest); a fresh proposal follows.
+- *"Niet geplaatst: X …"*: X refused. A fresh proposal follows so you can retry. "duplicate content" means the post already exists.
+- **Errors are in Vercel → Logs**, filtered on `/api/telegram` or `/api/voorstel`.

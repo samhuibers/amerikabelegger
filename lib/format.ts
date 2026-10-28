@@ -85,6 +85,15 @@ export function formatQuarter(quarter: number, year: number): string {
   return `Q${quarter} ${year}`;
 }
 
+/** `15:02`, in Amsterdam: de server draait in UTC. */
+export function formatTime(date: Date): string {
+  return new Intl.DateTimeFormat(LOCALE, {
+    hour: "2-digit",
+    minute: "2-digit",
+    timeZone: "Europe/Amsterdam",
+  }).format(date);
+}
+
 /** `4 maart 2026` */
 export function formatDate(date: Date): string {
   return new Intl.DateTimeFormat(LOCALE, {

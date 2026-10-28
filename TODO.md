@@ -4,9 +4,8 @@ Open work and points of attention. Decisions and their reasons live in
 [docs/decisions.md](docs/decisions.md); this file only says what still has to happen.
 Remove an item once it's done.
 
-**Next session:** step 3 (Kwartaalseizoen) is built. Next is step 4, Telegram approval → X
-posting: write its plan first. It's blocked on the X developer account and the Telegram bot (see
-"Waiting on the team"). What steps 1–3 built is in [docs/build-log.md](docs/build-log.md).
+**Next session: start with [docs/plan-step-4.md](docs/plan-step-4.md)** (Telegram approval →
+X posting; code built, production test pending: see the step 4 item below). What steps 1–3 built is in [docs/build-log.md](docs/build-log.md).
 
 ## Phase 1: X content engine (deadline: Q3 13F filings, ~16 Nov 2026)
 
@@ -31,7 +30,14 @@ These are `null` in `postTypes` in `lib/posts.ts`; the preview shows "nog niet b
   to change). Changing it changes who goes first.
 - [ ] **Rotation order** in `lib/posts.ts` is Claude's draft. Sam and the partners review it.
 - [ ] Wall Street gisteren: needs a price-data provider (commercial licence, see below) and a US market holiday calendar
-- [ ] Telegram approval flow: scheduled job → preview in Telegram → "Plaats" / "Overslaan" → post via X API
+- [ ] **Telegram approval flow (step 4): code built 27 Oct, production test pending.** Sam:
+  1. set the nine environment variables in Vercel (list in docs/handover.md, "Posting to X") and
+     the same in `.env.local`;
+  2. commit and push (Vercel deploys, and the cron job appears);
+  3. register the webhook (command in handover.md);
+  4. test: `?datum=2026-11-13` proposal → "Overslaan"; another → "Plaats" (must be refused: not today);
+     tap twice quickly (only one may count);
+  5. one real test post with card, at a moment Sam picks, then delete it.
 - [ ] Company names: extend `companyNames` in `lib/content.ts` whenever an ugly fallback name shows up (top five is covered)
 - [ ] Homepage ticker: real end-of-day prices with a date, replacing `tickerRows`
 - [ ] Media gallery: a visible "voorbeeld" label
@@ -59,19 +65,22 @@ These are `null` in `postTypes` in `lib/posts.ts`; the preview shows "nog niet b
 - [ ] Vercel Hobby → Pro. Hobby is meant for non-commercial use, and its cron timing is
   imprecise. Required before fully automatic posting.
 - [ ] Supabase: deferred to phase 2.
+- [ ] **Before phase 2 reads X posts:** update the use-case description in the X developer
+  portal first (decisions.md, 27 Oct). Also check the per-read cost on pay-per-use, X's rules
+  for showing posts off X and honouring deletions, and the current terms on using X content with AI.
 - [ ] **Kwartaalseizoen covers 8 of the 30 investors per season** (one per Mon–Thu slot for two
   weeks). Fine for now (Sam, 27 Oct). Revisit: two investors per day, or a longer season.
 
 ### Waiting on the team (start now, these block the build)
 - [x] Handle **@amerikabelegger** secured (27 Oct 2026), for now on an account Sam created.
+- [x] X developer account created and Telegram bot @amerikabelegger_bot + group set up (27 Oct 2026).
+- [ ] Add the three partners to the Telegram group, collect their user IDs (`getUpdates`) and add
+  them to `TELEGRAM_APPROVERS` in Vercel; redeploy.
 - [ ] **Make that account the brand account:** switch it to a shared team email, turn on 2FA,
   set the display name and photo. Don't rename it to free the handle for a new account:
   anyone could claim @amerikabelegger in between.
-- [ ] **Create the X developer account** with pay-per-use billing, attached to the brand
-  account. The access tokens let our code post as the brand.
 - [ ] **Price-data budget.** Claude prepares a comparison of providers whose terms allow
   public display; the team decides. Wall Street gisteren and the real ticker are blocked until then.
-- [ ] Create the Telegram bot (via BotFather) and the approval group; collect the approvers' Telegram user IDs.
 - [ ] Pick the newsletter service.
 
 ### Open questions
@@ -97,3 +106,7 @@ These are `null` in `postTypes` in `lib/posts.ts`; the preview shows "nog niet b
 - [ ] NEW HOLDINGS amendments to a 13F are reported but not merged.
 - [ ] `data/13f.json` ends up in an unused client chunk (harmless; public data).
 - [ ] Lint warning: unused `Team` in `app/over-ons/page.tsx`.
+
+## When the site gets its own domain
+- [ ] Register the Telegram webhook again with the new address (command in docs/plan-step-4.md, §9).
+- [ ] Update the website URL (and callback URL) in the X developer app.
