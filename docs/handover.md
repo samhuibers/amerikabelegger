@@ -119,7 +119,9 @@ Add `?datum=2026-11-13` for another day's proposal, to test. Posting it is refus
 **What the messages mean:**
 - *"Dit voorstel is al afgehandeld"*: someone else tapped first.
 - *"de post is veranderd sinds dit voorstel"*: the data changed after the proposal (for example a morning ingest); a fresh proposal follows.
-- *"Niet geplaatst: X …"*: X refused. A fresh proposal follows so you can retry. "duplicate content" means the post already exists.
+- *"Niet geplaatst: X …"*: X refused. A fresh proposal follows so you can retry.
+  - "duplicate content": the post already exists.
+  - 402 "credits depleted": the pay-per-use balance is empty. Top up in the X developer console, then tap the fresh proposal.
 - **Errors are in Vercel → Logs**, filtered on `/api/telegram` or `/api/voorstel`.
 
 **Adding an approver:**

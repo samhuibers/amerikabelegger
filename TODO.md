@@ -5,7 +5,7 @@ Open work and points of attention. Decisions and their reasons live in
 Remove an item once it's done.
 
 **Next session: start with [docs/plan-step-4.md](docs/plan-step-4.md)** (Telegram approval →
-X posting; code built, production test pending: see the step 4 item below). What steps 1–3 built is in [docs/build-log.md](docs/build-log.md).
+X posting; live, only the double tap left: see the step 4 item below). What steps 1–4 built is in [docs/build-log.md](docs/build-log.md).
 
 ## Phase 1: X content engine (deadline: Q3 13F filings, ~16 Nov 2026)
 
@@ -31,9 +31,10 @@ These are `null` in `postTypes` in `lib/posts.ts`; the preview shows "nog niet b
 - [ ] **Rotation order** in `lib/posts.ts` is Claude's draft. Sam and the partners review it.
 - [ ] Wall Street gisteren: needs a price-data provider (commercial licence, see below) and a US market holiday calendar
 - [ ] **Telegram approval flow (step 4): live on production since 28 Oct.** Environment variables,
-  deploy and webhook done; "Overslaan" and the date refusal tested by Sam. Still to do before 13 Nov:
-  - the double tap: one proposal, tapped on two devices at once (only one may count);
-  - one real test post with card, at a moment Sam picks, then delete it.
+  deploy and webhook done; "Overslaan" and the date refusal tested by Sam; a real test post with
+  card went out on 29 Oct (after topping up X credits). Still to do before 13 Nov:
+  - the double tap: one proposal, tapped on two devices at once (only one may count). Sam's phone
+    and laptop are enough, both logged in as Sam.
 - [ ] Company names: extend `companyNames` in `lib/content.ts` whenever an ugly fallback name shows up (top five is covered)
 - [ ] Homepage ticker: real end-of-day prices with a date, replacing `tickerRows`
 - [ ] Media gallery: a visible "voorbeeld" label
@@ -97,7 +98,9 @@ These are `null` in `postTypes` in `lib/posts.ts`; the preview shows "nog niet b
 - [ ] X bio: the site link and a short "Geen beleggingsadvies." (posts carry no disclaimer).
 - [ ] On the first real API post, check in the developer console that a post with cashtags was
   billed as a plain post ($0.015), not as a post with a URL ($0.20). X's pricing page names
-  only URLs, but doesn't say.
+  only URLs, but doesn't say. (The 29 Oct test post had no cashtags, so it doesn't answer this.)
+- [ ] **Keep X credit topped up.** At zero, posting fails with 402 "credits depleted". Consider
+  auto-recharge in the developer console, or a reminder.
 
 ## Carried over from docs/handover.md
 - [ ] NEW HOLDINGS amendments to a 13F are reported but not merged.

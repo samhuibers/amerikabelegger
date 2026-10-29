@@ -1,8 +1,8 @@
 # Plan: phase 1, step 4 — Telegram approval → X posting
 
-*Written 27 October 2026. Status: **code built 27 October 2026; production test pending**. Sam
-sets the environment variables, deploys, registers the webhook, then tests (see "How to verify",
-3–5). How it runs day to day is in [handover.md](handover.md), "Posting to X".*
+*Written 27 October 2026. Status: **live on production since 28 October; verify steps 1–4 done
+(real test post 29 October); only the double tap (5) is left**. How it runs day to day is in
+[handover.md](handover.md), "Posting to X".*
 
 **Where the build differs from this plan:**
 - `/api/voorstel` accepts `?datum=` (only with the secret) to send another day's proposal for

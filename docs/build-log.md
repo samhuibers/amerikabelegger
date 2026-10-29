@@ -40,3 +40,18 @@ into the site, and each profile page shows the portfolio.
   would have made all his holdings look new. A general check now skips comparisons like that.
 - **During the season**, Sam updates the data each morning and fixes any unreadable company names
   before the 15:00 post.
+
+## Step 4: approval in Telegram, posting to X (27–29 Oct 2026)
+- **Every posting day before 15:00**, the bot sends the day's post to the Telegram group
+  "Amerikabelegger beheer": card, text and two buttons, "Plaats" and "Overslaan".
+- **One tap on "Plaats" posts it on @amerikabelegger**, card included, and the message then says who
+  posted it, when, and links to the post. Only listed approvers can tap; for now that's Sam, the
+  partners follow.
+- **What you approve is exactly what goes out.** If the data changes after the proposal, the tap
+  is refused and a fresh proposal arrives. Yesterday's proposal can't be posted today.
+- **Nothing is stored:** no database. The post is recomputed from the data at the moment of the tap.
+- **No extra software:** the connections to X and Telegram are our own small files.
+- **Cost:** X charges per post, about $0.015 each, so well under $1 a month. Posts carry no links,
+  which would cost $0.20 each.
+- **Tested on the live site:** skipping, refusing an old proposal, and one real post with card
+  (29 Oct, then deleted). Still to test: two approvers tapping at the same moment.
