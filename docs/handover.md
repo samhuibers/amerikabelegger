@@ -121,3 +121,13 @@ Add `?datum=2026-11-13` for another day's proposal, to test. Posting it is refus
 - *"de post is veranderd sinds dit voorstel"*: the data changed after the proposal (for example a morning ingest); a fresh proposal follows.
 - *"Niet geplaatst: X …"*: X refused. A fresh proposal follows so you can retry. "duplicate content" means the post already exists.
 - **Errors are in Vercel → Logs**, filtered on `/api/telegram` or `/api/voorstel`.
+
+**Adding an approver:**
+1. Add them to the Telegram group. Seeing proposals is harmless: a tap from someone not on the list is refused.
+2. Collect their user ID. `getUpdates` doesn't work while the webhook is registered, so remove it briefly:
+   `curl "https://api.telegram.org/bot$TELEGRAM_BOT_TOKEN/deleteWebhook"`
+3. They send `/start@amerikabelegger_bot` in the group. Open `https://api.telegram.org/bot<TOKEN>/getUpdates` and read `"from":{"id":…}`.
+4. Register the webhook again (the `setWebhook` command above).
+5. Add the ID to `TELEGRAM_APPROVERS` in Vercel and in `.env.local`, then redeploy.
+
+Don't change the group's settings (for example chat history visible to new members). That can turn it into a supergroup with a new ID; then run `getUpdates` again and update `TELEGRAM_CHAT_ID`.

@@ -36,15 +36,15 @@ export function oauthSignature(base: string, consumerSecret: string, tokenSecret
 }
 
 function credentials() {
-  const keys = {
-    apiKey: process.env.X_API_KEY,
-    apiSecret: process.env.X_API_SECRET,
-    accessToken: process.env.X_ACCESS_TOKEN,
-    accessTokenSecret: process.env.X_ACCESS_TOKEN_SECRET,
+  const names = ["X_API_KEY", "X_API_SECRET", "X_ACCESS_TOKEN", "X_ACCESS_TOKEN_SECRET"];
+  const missing = names.filter((name) => !process.env[name]);
+  if (missing.length) throw new Error(`Omgevingsvariabelen ontbreken: ${missing.join(", ")}`);
+  return {
+    apiKey: process.env.X_API_KEY!,
+    apiSecret: process.env.X_API_SECRET!,
+    accessToken: process.env.X_ACCESS_TOKEN!,
+    accessTokenSecret: process.env.X_ACCESS_TOKEN_SECRET!,
   };
-  const missing = Object.entries(keys).filter(([, value]) => !value);
-  if (missing.length) throw new Error(`X-sleutels ontbreken: ${missing.map(([name]) => name).join(", ")}`);
-  return keys as Record<keyof typeof keys, string>;
 }
 
 /** De Authorization-header voor één verzoek. Elke keer een nieuwe nonce en tijd, zodat X een herhaling weigert. */

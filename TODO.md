@@ -30,14 +30,10 @@ These are `null` in `postTypes` in `lib/posts.ts`; the preview shows "nog niet b
   to change). Changing it changes who goes first.
 - [ ] **Rotation order** in `lib/posts.ts` is Claude's draft. Sam and the partners review it.
 - [ ] Wall Street gisteren: needs a price-data provider (commercial licence, see below) and a US market holiday calendar
-- [ ] **Telegram approval flow (step 4): code built 27 Oct, production test pending.** Sam:
-  1. set the nine environment variables in Vercel (list in docs/handover.md, "Posting to X") and
-     the same in `.env.local`;
-  2. commit and push (Vercel deploys, and the cron job appears);
-  3. register the webhook (command in handover.md);
-  4. test: `?datum=2026-11-13` proposal → "Overslaan"; another → "Plaats" (must be refused: not today);
-     tap twice quickly (only one may count);
-  5. one real test post with card, at a moment Sam picks, then delete it.
+- [ ] **Telegram approval flow (step 4): live on production since 28 Oct.** Environment variables,
+  deploy and webhook done; "Overslaan" and the date refusal tested by Sam. Still to do before 13 Nov:
+  - the double tap: one proposal, tapped on two devices at once (only one may count);
+  - one real test post with card, at a moment Sam picks, then delete it.
 - [ ] Company names: extend `companyNames` in `lib/content.ts` whenever an ugly fallback name shows up (top five is covered)
 - [ ] Homepage ticker: real end-of-day prices with a date, replacing `tickerRows`
 - [ ] Media gallery: a visible "voorbeeld" label
@@ -74,8 +70,9 @@ These are `null` in `postTypes` in `lib/posts.ts`; the preview shows "nog niet b
 ### Waiting on the team (start now, these block the build)
 - [x] Handle **@amerikabelegger** secured (27 Oct 2026), for now on an account Sam created.
 - [x] X developer account created and Telegram bot @amerikabelegger_bot + group set up (27 Oct 2026).
-- [ ] Add the three partners to the Telegram group, collect their user IDs (`getUpdates`) and add
-  them to `TELEGRAM_APPROVERS` in Vercel; redeploy.
+- [ ] Add the three partners to the Telegram group now; put their IDs on `TELEGRAM_APPROVERS` only
+  after the step 4 production test passes. Steps (including the webhook catch) in docs/handover.md,
+  "Adding an approver".
 - [ ] **Make that account the brand account:** switch it to a shared team email, turn on 2FA,
   set the display name and photo. Don't rename it to free the handle for a new account:
   anyone could claim @amerikabelegger in between.

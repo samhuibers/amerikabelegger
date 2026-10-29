@@ -23,6 +23,12 @@ What Sam has actually learned, based on evidence: a check question answered, or 
   - 2026-10-27, still shaky: asked what must happen between the morning ingest and the 15:00
     post, answered "npm run build". That only builds on the laptop; the live site needs commit →
     push → Vercel build. Knew that the live preview would show old data without it.
+- 2026-10-28: Stateless approval (step 4). Thought a tap on an outdated proposal would post the new
+  data. In fact the fingerprint differs, so nothing is posted and a fresh proposal is sent:
+  approving means approving exactly what you saw.
+- 2026-10-28: Why the webhook always answers Telegram with 200. Answered about who checks what
+  (approver list vs. X). Missed that Telegram re-sends a tap after any non-200 answer, which could
+  trigger a second posting attempt (idempotency).
 - 2026-10-27: Why `/voorvertoning` renders per visit (ƒ) while the cards are built once (●).
   Answered that code changes wouldn't show up. In fact every commit rebuilds; the real problem
   is that the date changes without a commit, so a built-once preview goes stale. Also thought
