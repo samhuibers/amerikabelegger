@@ -4,8 +4,7 @@ Open work and points of attention. Decisions and their reasons live in
 [docs/decisions.md](docs/decisions.md); this file only says what still has to happen.
 Remove an item once it's done.
 
-**Next session: start with [docs/plan-step-4.md](docs/plan-step-4.md)** (Telegram approval →
-X posting; live, only the double tap left: see the step 4 item below). What steps 1–4 built is in [docs/build-log.md](docs/build-log.md).
+What steps 1–4 built is in [docs/build-log.md](docs/build-log.md).
 
 ## Phase 1: X content engine (deadline: Q3 13F filings, ~16 Nov 2026)
 
@@ -30,11 +29,6 @@ These are `null` in `postTypes` in `lib/posts.ts`; the preview shows "nog niet b
   to change). Changing it changes who goes first.
 - [ ] **Rotation order** in `lib/posts.ts` is Claude's draft. Sam and the partners review it.
 - [ ] Wall Street gisteren: needs a price-data provider (commercial licence, see below) and a US market holiday calendar
-- [ ] **Telegram approval flow (step 4): live on production since 28 Oct.** Environment variables,
-  deploy and webhook done; "Overslaan" and the date refusal tested by Sam; a real test post with
-  card went out on 29 Oct (after topping up X credits). Still to do before 13 Nov:
-  - the double tap: one proposal, tapped on two devices at once (only one may count). Sam's phone
-    and laptop are enough, both logged in as Sam.
 - [ ] Company names: extend `companyNames` in `lib/content.ts` whenever an ugly fallback name shows up (top five is covered)
 - [ ] Homepage ticker: real end-of-day prices with a date, replacing `tickerRows`
 - [ ] Media gallery: a visible "voorbeeld" label
@@ -71,9 +65,8 @@ These are `null` in `postTypes` in `lib/posts.ts`; the preview shows "nog niet b
 ### Waiting on the team (start now, these block the build)
 - [x] Handle **@amerikabelegger** secured (27 Oct 2026), for now on an account Sam created.
 - [x] X developer account created and Telegram bot @amerikabelegger_bot + group set up (27 Oct 2026).
-- [ ] Add the three partners to the Telegram group now; put their IDs on `TELEGRAM_APPROVERS` only
-  after the step 4 production test passes. Steps (including the webhook catch) in docs/handover.md,
-  "Adding an approver".
+- [ ] Add the three partners to the Telegram group and put their IDs on `TELEGRAM_APPROVERS`.
+  Steps (including the webhook catch) in docs/handover.md, "Adding an approver".
 - [ ] **Make that account the brand account:** switch it to a shared team email, turn on 2FA,
   set the display name and photo. Don't rename it to free the handle for a new account:
   anyone could claim @amerikabelegger in between.
@@ -108,5 +101,5 @@ These are `null` in `postTypes` in `lib/posts.ts`; the preview shows "nog niet b
 - [ ] Lint warning: unused `Team` in `app/over-ons/page.tsx`.
 
 ## When the site gets its own domain
-- [ ] Register the Telegram webhook again with the new address (command in docs/plan-step-4.md, §9).
+- [ ] Register the Telegram webhook again with the new address (command in docs/step-4-design.md, §9).
 - [ ] Update the website URL (and callback URL) in the X developer app.

@@ -1,10 +1,10 @@
-# Plan: phase 1, step 4 — Telegram approval → X posting
+# Design: phase 1, step 4 — Telegram approval → X posting
 
-*Written 27 October 2026. Status: **live on production since 28 October; verify steps 1–4 done
-(real test post 29 October); only the double tap (5) is left**. How it runs day to day is in
+*Written 27 October 2026 as a plan, kept as the design record. Status: **live on production since
+28 October; verification steps 1–4 done (real test post 29 October)**. How it runs day to day is in
 [handover.md](handover.md), "Posting to X".*
 
-**Where the build differs from this plan:**
+**Where the build differs from the original plan:**
 - `/api/voorstel` accepts `?datum=` (only with the secret) to send another day's proposal for
   testing. The webhook still posts only today's.
 - The card URL in Telegram carries `?v=<fingerprint>`, because Telegram caches photos by URL.
@@ -13,16 +13,16 @@
 - Local tests stop before Telegram: Telegram can't fetch card images from `localhost`, so the
   real round trip is tested on production.
 
-This file is the starting point for a fresh session. Read it, then [TODO.md](../TODO.md),
-[decisions.md](decisions.md) and [build-log.md](build-log.md). CLAUDE.md and AGENTS.md apply as
-always: plan → Sam's OK → build → recap → check question. Sam runs git.
+This file explains why step 4 is built the way it is, and what we rejected. For what is still open,
+see [TODO.md](../TODO.md); for the reasons behind decisions, [decisions.md](decisions.md); for what
+each step delivered, [build-log.md](build-log.md).
 
-## Where we are
+## Where step 4 sits
 
 1. ~~Card shell + Topbelegger card.~~
 2. ~~Post text, `postTypes`, `/voorvertoning`.~~
 3. ~~Kwartaalseizoen.~~
-4. **Telegram approval → X posting.** ← this plan
+4. ~~Telegram approval → X posting.~~ ← this document
 5. Wall Street gisteren + real ticker (waits on the price-data budget).
 6. Site launch items.
 
@@ -222,6 +222,7 @@ The non-secret IDs live there too, so changing approvers doesn't need a code cha
 4. **One real test post** with card, after Sam's OK. It costs $0.015 and is deleted afterwards. It
    proves the upload, the signature and the permissions in one go, before 13 Nov.
 5. **Double-tap:** two people tap "Plaats" on the same preview, and exactly one post appears.
+   *(Not run; dropped from the to-do list on 29 Oct. Section 4 describes the protection.)*
 
 ## Answered 27 Oct
 
@@ -251,4 +252,3 @@ The non-secret IDs live there too, so changing approvers doesn't need a code cha
 - **`ENOTEMPTY` on `npm run build`:** the repo is in iCloud-synced `~/Documents`. Delete `.next`
   and build again; moving the repo out of iCloud fixes it for good.
 - **npm, not pnpm.** **Check posts against a production build** (`npm run build && npx next start`).
-- **Uncommitted on purpose:** `package.json` / `package-lock.json` (Next version, see TODO.md).
