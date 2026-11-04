@@ -32,7 +32,6 @@ These are `null` in `postTypes` in `lib/posts.ts`; the preview shows "nog niet b
 - [ ] Company names: extend `companyNames` in `lib/content.ts` whenever an ugly fallback name shows up (top five is covered)
 - [ ] Homepage ticker: real end-of-day prices with a date, replacing `tickerRows`
 - [ ] Media gallery: a visible "voorbeeld" label
-- [ ] Empty pages (Giants, Growers, Moonshots, Influencers, Modelportefeuilles): a "binnenkort" note
 - [ ] Newsletter signup: pick a hosted service and link it from the X bio and the site
 
 ### During the first quarter season (~12–30 Nov; Kwartaalseizoen posts 17–30 Nov)
@@ -75,14 +74,12 @@ These are `null` in `postTypes` in `lib/posts.ts`; the preview shows "nog niet b
 - [ ] Pick the newsletter service.
 
 ### Open questions
-- [ ] Profile pages still show names as filed ("COCA COLA CO"). Switch them to `companyName()`?
 
 ## Before the site and the X account go public (together, ~16 Nov)
 - [ ] **TE CONTROLEREN** in `lib/content.ts` (Sam does this): investor style, horizon and
   summaries are LLM drafts with no source. Verify each one against a statement or filing,
   with platform and date, or remove it. The style group also appears on the Topbelegger
   cards. Also check whether Mandel (Lone Pine) still counts as active.
-- [ ] Sam's bio on /over-ons is invented placeholder text.
 - [ ] X account: set the "Automated" label, and decide who owns the developer account and its billing.
 - [ ] Keep links out of posts (they cost $0.20 each through the API and lower reach). Put the site link in the bio.
 - [ ] X bio: the site link and a short "Geen beleggingsadvies." (posts carry no disclaimer).
@@ -95,7 +92,6 @@ These are `null` in `postTypes` in `lib/posts.ts`; the preview shows "nog niet b
 ## Carried over from docs/handover.md
 - [ ] NEW HOLDINGS amendments to a 13F are reported but not merged.
 - [ ] `data/13f.json` ends up in an unused client chunk (harmless; public data).
-- [ ] Lint warning: unused `Team` in `app/over-ons/page.tsx`.
 
 ## When the site gets its own domain
 - [ ] Register the Telegram webhook again with the new address (command in docs/step-4-design.md, §9).

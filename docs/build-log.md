@@ -54,3 +54,10 @@ into the site, and each profile page shows the portfolio.
 - **Cost:** X charges per post, about $0.015 each, so well under $1 a month. Posts carry no links,
   which would cost $0.20 each.
 - **Tested on the live site:** skipping, refusing an old proposal, and one real post with card
+
+## Site fixes before launch (4 Nov 2026)
+- **Readable company names everywhere:** the profile pages now use the same names as the posts.
+  Common SEC abbreviations are written out ("Hldgs" → "Holdings").
+- **Empty pages** (Giants, Growers, Moonshots, Influencers, Modelportefeuilles) say
+  "Binnenkort meer op deze pagina."
+- **"Wie wij zijn" removed** from /over-ons until everyone has approved their bio.

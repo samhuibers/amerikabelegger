@@ -224,3 +224,18 @@ Bron: 13F over Q2 2026, ingediend bij de SEC op 14 augustus 2026.
 **Chose:** the holdings strip and ledger on `/topbeleggers/[slug]` use `companyName()`, like the cards and Telegram proposals. The ticker stays beside each name.
 **Instead of:** the name as filed ("COCA COLA CO"), which the profile page showed since September.
 **Why:** one name per company across the site. Share classes still get their own row (GOOGL and GOOG both read "Alphabet", told apart by the ticker); only the cards merge them.
+
+## 2026-11-04: Fallback company names expand SEC abbreviations
+**Chose:** an `ABBREVIATIONS` table in `lib/content.ts`, used by `cleanIssuer` word by word ("HLDGS" → "Holdings", "FINL" → "Financial"). Collected from `data/13f.json`; 139 profile names changed. Words with more than one meaning in a company name (MED, NAT, ST, CAP, PT) stay as filed.
+**Instead of:** adding every name to `companyNames` by hand (929 distinct names), or leaving them abbreviated.
+**Why:** one small table fixes most of the names at once. What it can't do (capitals inside a word, acronyms, names the SEC cut off) still goes in `companyNames`.
+
+## 2026-11-04: The "Wie wij zijn" section on /over-ons is deleted
+**Chose:** delete the unrendered `Team` component and the `team` data. Git history keeps them (the last commit with them is `06e5726`).
+**Instead of:** silencing the lint warning and keeping the section parked, or publishing it before everyone had approved their bio.
+**Why:** the bios weren't approved and one was placeholder text. The note above the component said to delete it at the next cleanup if it was still unpublished.
+
+## 2026-11-04: Empty pages say "Binnenkort meer op deze pagina."
+**Chose:** one muted line under the title on Giants, Growers, Moonshots, Influencers and Modelportefeuilles, written out in each page (the three category pages share one component).
+**Instead of:** a `binnenkort` option on `Masthead`, or a separate sentence per page about what is coming.
+**Why:** a flag on a shared component for something temporary is harder to remove than one line per page. A specific promise would commit to content that isn't designed yet.

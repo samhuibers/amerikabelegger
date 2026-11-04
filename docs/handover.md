@@ -79,7 +79,7 @@ Each morning of the season:
 2. ~~**Profile-page design pass.**~~ Done 25 September 2026. Sam picked the strip with a two-column ledger below it from three rendered treatments. The choice is recorded in the `Portfolio` doc comment.
 3. **Readable company names.** Partly done. SEC's names are raw ("COCA COLA CO", "STATE STR SPDR S&P 500 ETF").
    - **Done:** `companyName()` in `lib/content.ts` cleans the name automatically (`cleanIssuer`) and uses the hand-kept `companyNames` list, keyed by ticker, where that falls short. The post cards and the Telegram proposals use it (via `topPositions`). Decision of 22 Oct 2026 in `docs/decisions.md`.
-   - **Still open:** the profile page ([app/topbeleggers/[slug]/page.tsx](../app/topbeleggers/[slug]/page.tsx)) still shows the raw `holding.issuer`, so it needs `companyName()` too.
+   - **Done 4 Nov 2026:** the profile page uses `companyName()` too, and `cleanIssuer` expands SEC abbreviations ("HLDGS" → "Holdings").
    - **Still open:** the real company table for Giants, Growers and Moonshots. `companyNames` is only the seed for it, and nothing else exists yet.
 4. **The TE CONTROLEREN note in `lib/content.ts`** still stands. Style, horizon and summaries need a source before publication. Also check whether Mandel (Lone Pine) still counts as active.
 
@@ -88,7 +88,7 @@ Each morning of the season:
 - **This project uses npm, not pnpm.** `pnpm dev` starts an install that restructures `node_modules` and leaves `pnpm-lock.yaml` and `pnpm-workspace.yaml` behind. If it happens again, delete those two files and run `npm ci`.
 - **NEW HOLDINGS amendments aren't merged.** Such an amendment adds positions that were previously confidential. The script reports it and skips it, which is rare enough for now.
 - **The holdings JSON sits in an unused client chunk.** `components/site-header.tsx` is a client component that imports `lib/content.ts`, so the build emits the JSON as a lazy chunk. No page loads it, but the file is deployed. It's public SEC data, so it's harmless.
-- **Lint:** the only warning, an unused `Team` in `app/over-ons/page.tsx`, came before this work.
+- **Lint:** clean since 4 Nov 2026.
 
 ## Posting to X (since step 4, 27 Oct 2026)
 

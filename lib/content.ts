@@ -424,15 +424,42 @@ const LEGAL_SUFFIXES = new Set([
   "ORD", "CL", "A", "B", "C",
 ]);
 
+/*
+ * De afkortingen van de SEC, verzameld uit data/13f.json (november 2026). Alleen
+ * woorden met één betekenis in een bedrijfsnaam: MED (medical, maar ook "MED
+ * TER" = medium term), NAT, ST, CAP en PT ("PT Bank …" in Indonesië) blijven
+ * daarom staan.
+ */
+const ABBREVIATIONS: Record<string, string> = {
+  AMER: "America", AMERN: "American", BK: "Bank", BLDG: "Building",
+  CONSMR: "Consumer", CTRY: "Country", CTZNS: "Citizens", ELEC: "Electric",
+  ELECTRS: "Electronics", ENTMNT: "Entertainment", ENTMT: "Entertainment",
+  EXCH: "Exchange", FD: "Fund", FDS: "Funds", FGHT: "Freight", FINL: "Financial",
+  GRDN: "Garden", HLDG: "Holding", HLDGS: "Holdings", HLDNGS: "Holdings",
+  INDL: "Industrial", INDS: "Industries", INDTY: "Indemnity",
+  INFRAS: "Infrastructure", INS: "Insurance", INSTRS: "Instruments",
+  INTL: "International", MACHS: "Machines", MANAGMT: "Management",
+  MATLS: "Materials", MFG: "Manufacturing", MGMT: "Management", MKTS: "Markets",
+  MNFTG: "Manufacturing", MNG: "Mining", MTNS: "Mountains", MTRS: "Motors",
+  MUN: "Municipal", NATL: "National", NY: "New York", PAC: "Pacific",
+  PETE: "Petroleum", PMTS: "Payments", PPTY: "Property", PPTYS: "Properties",
+  PROC: "Processing", PRODS: "Products", PWR: "Power", RES: "Resources",
+  RESH: "Research", RIV: "River", RLTY: "Realty", RUBR: "Rubber", RY: "Railway",
+  SOUTHN: "Southern", SPRT: "Sports", STR: "Street", SVCS: "Services",
+  SYS: "Systems", TOB: "Tobacco", TR: "Trust", TRANSN: "Transportation",
+  UTD: "United", WHSL: "Wholesale",
+};
+
 /**
  * Noodoplossing voor een ticker die niet in `companyNames` staat:
- * "WATERS CORP" → "Waters". Afkortingen in de filing blijven staan
- * ("APPLIED MATLS INC" → "Applied Matls"); daarvoor is de lijst.
+ * "APPLIED MATLS INC" → "Applied Materials". Wat dit niet kan: hoofdletters
+ * binnen een woord ("Costar", "Oreilly") en namen die de SEC heeft afgekapt;
+ * daarvoor is de lijst.
  */
 function cleanIssuer(issuer: string) {
   const words = issuer.toUpperCase().split(/\s+/);
   while (words.length > 1 && LEGAL_SUFFIXES.has(words.at(-1)!)) words.pop();
-  return words.map((w) => w[0] + w.slice(1).toLowerCase()).join(" ");
+  return words.map((w) => ABBREVIATIONS[w] ?? w[0] + w.slice(1).toLowerCase()).join(" ");
 }
 
 export function companyName(holding: Holding) {
@@ -1125,57 +1152,5 @@ export const principles = [
     body:
       "Waar wij zelf iets vinden, staat Redactie erboven en ziet het er anders uit " +
       "dan alles wat wij citeren. Eigen onderzoek doen wij niet.",
-  },
-];
-
-/*
- * The four people behind the site, oldest hand first.
- *
- * Bios are drawn from public sources and stay factual: a role line and two
- * sentences is the entire format. No portraits — photography is homepage-only
- * (docs/STYLE_GUIDE.md), and a row of headshots would be the fifth ornament.
- */
-export const team: {
-  name: string;
-  role: string;
-  bio: string;
-  href: string;
-}[] = [
-  {
-    name: "Aart Lensink",
-    role: "Merk en positionering",
-    bio:
-      "Richtte contentmarketingbureau LVB op en leidde het 27 jaar, daarna managing " +
-      "director van iO Campus Utrecht. Contentmarketeer van het Jaar 2018, auteur van " +
-      "twee boeken over het vak, en inmiddels zelfstandig merkadviseur voor de " +
-      "financiële sector.",
-    href: "https://www.linkedin.com/in/aart-lensink-992192/",
-  },
-  {
-    name: "Coen Huibers",
-    role: "Redactie en productie",
-    bio:
-      "Partner bij LVB, sinds de overname onderdeel van iO. Bouwde daar aan video, " +
-      "brand publishing en geïntegreerde merkcampagnes — het maakwerk waar deze site " +
-      "dagelijks op draait.",
-    href: "https://www.linkedin.com/in/coenhuibers/",
-  },
-  {
-    name: "Daniël Lensink",
-    role: "AI en distributie",
-    bio:
-      "AI-native contentmarketeer, werkzaam bij hypotheekverstrekker Frits. Houdt " +
-      "bij wat er te halen valt uit nieuwe tooling en waar het handwerk moet blijven.",
-    href: "https://www.linkedin.com/in/daniel-lensink/",
-  },
-  {
-    // PLACEHOLDER — nothing verifiable about this Sam Huibers is public, so this
-    // bio is invented scaffolding. Replace before the page goes live.
-    name: "Sam Huibers",
-    role: "Techniek en vormgeving",
-    bio:
-      "Bouwt en onderhoudt De Amerikabelegger: de site, de vormgeving en de manier " +
-      "waarop het archief wordt opgeslagen.",
-    href: "https://www.linkedin.com/in/sam-huibers/",
   },
 ];

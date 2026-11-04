@@ -1,14 +1,11 @@
 import { Masthead } from "@/components/masthead";
 import { Seal } from "@/components/seal";
-import { principles, team } from "@/lib/content";
+import { principles } from "@/lib/content";
 
 /*
  * The page where the site explains itself, so the rule that outranks the rest
  * is stated here in public rather than only in the style guide: we collect and
  * order, we do not research. Every line below was checked against that.
- *
- * No photographs — they are homepage-only. The people are carried by a name, a
- * role and two sentences, on a hairline grid.
  */
 export default function Page() {
   return (
@@ -70,68 +67,7 @@ export default function Page() {
             ))}
           </dl>
         </section>
-
-        {/* <Team /> — withheld on purpose. See the note above the function. */}
       </div>
     </>
-  );
-}
-
-/*
- * NOT RENDERED. "Wie wij zijn" is finished but deliberately withheld from the
- * public site for now, by decision of the owner — three of the four bios are
- * assembled from public sources and one is still placeholder scaffolding, so
- * the section stays off until the people in it have signed off on their own
- * text and roles.
- *
- * Kept as an uncalled component rather than commented-out JSX so it still
- * typechecks and still moves when `team` or the tokens change. To publish it,
- * render <Team /> where the marker above sits and delete this note. If it is
- * still dark at the next cleanup, delete the function and `team` with it —
- * this is a parked section, not a permanent switch.
- */
-function Team() {
-  return (
-    <section aria-labelledby="team" className="mt-20">
-      <h2 id="team" className="font-display text-display-m">
-        Wie wij zijn
-      </h2>
-      <div className="scotch-rule mt-4 max-w-reading" />
-      <p className="mt-6 max-w-reading text-body-l">
-        Vier mensen uit de contentmarketing en de media, met tientallen jaren
-        ervaring in het bouwen van merken en redacties. Wij zijn klein, en dat is
-        een keuze: het betekent dat elke rubriek een naam heeft en dat wij snel
-        kunnen bijsturen als blijkt dat iets beter kan.
-      </p>
-
-      {/*
-       * Hairline grid rather than cards: borders on paper are `ink/15`, and a
-       * bordered box per person would read as the shadowed-card pattern the
-       * style guide rules out.
-       */}
-      <ul className="mt-10 grid border-t border-ink/15 md:grid-cols-2">
-        {team.map((member) => (
-          <li
-            key={member.name}
-            className="border-b border-ink/15 py-8 md:odd:border-r md:odd:pr-10 md:even:pl-10"
-          >
-            <h3 className="font-display text-display-s">{member.name}</h3>
-            {/* Not brass: brass on paper is 2.64:1 and structural only. */}
-            <p className="mt-1 text-body-s font-medium text-ink">
-              {member.role}
-            </p>
-            <p className="mt-3 max-w-reading text-body-s text-ink-soft">
-              {member.bio}
-            </p>
-            <a
-              href={member.href}
-              className="mt-4 inline-block text-body-s text-ink underline underline-offset-4 hover:text-seal"
-            >
-              LinkedIn
-            </a>
-          </li>
-        ))}
-      </ul>
-    </section>
   );
 }
