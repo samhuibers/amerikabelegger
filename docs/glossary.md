@@ -47,3 +47,5 @@ Terms that come up in this project, explained plainly.
 **Fingerprint (hash).** A short code computed from a piece of data, which changes when the data changes. `postFingerprint` makes 8 characters from a post. If the post computed at the tap gives a different fingerprint than the one in the button, the text changed since the proposal.
 
 **Idempotent.** Doing it twice has the same effect as doing it once. Cron jobs and webhooks can arrive twice, so posting must never happen twice; the button lock and X's duplicate check make sure of that.
+
+**Static type checking.** TypeScript reading the code, without running it, to catch mistakes like importing a name that doesn't exist. It runs continuously in VS Code (the red underline) and again in `npm run build`; a failure stops the build, so on Vercel the previous version stays live.

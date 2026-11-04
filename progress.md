@@ -34,3 +34,12 @@ What Sam has actually learned, based on evidence: a check question answered, or 
   is that the date changes without a commit, so a built-once preview goes stale. Also thought
   the preview page sends posts; it only displays them, and the Telegram job will call
   `lib/posts.ts` itself. Related to the entry above.
+- 2026-11-04: How a fallback company name is made. Knew the capitals get fixed and HLDGS becomes
+  "Holdings". Thought INC is written out ("Incorporated"); in fact `cleanIssuer` first strips
+  legal suffixes from the end (`LEGAL_SUFFIXES`), then expands abbreviations, giving
+  "Acme Holdings". Didn't know the route: `companyName()` tries `companyNames` by ticker first,
+  and only falls back to `cleanIssuer`.
+- 2026-11-04: When a broken import shows up. Knew `npm run build` fails, but thought that's
+  because the import is "run" then. In fact TypeScript checks imports without running anything
+  (*static type checking*), so the editor flags it first; the build fails on the same check;
+  and on Vercel a failed build means the old version stays live, so a visitor never sees it.
