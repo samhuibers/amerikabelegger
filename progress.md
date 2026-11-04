@@ -13,6 +13,12 @@ What Sam has actually learned, based on evidence: a check question answered, or 
   `renderCard()` in `app/kaart/shell.tsx`, so the design changes in one place.
 - 2026-10-27: Why Kwartaalseizoen shows only "nieuw" and "helemaal verkocht": after a stock split
   the share count jumps without a purchase, so "bijgekocht" would be false.
+- 2026-11-04: Why the ticker's font went with it. Knew that leaving it breaks nothing and is
+  stale code. (Nuance added: `next/font` still preloads a font that is loaded in the layout, so
+  every visitor would download a file no page uses. Dead code here has a cost.)
+- 2026-11-04: Where removed code lives: in git history, at the last commit that still had it
+  (`43218ea` for the ticker). Didn't name the second half: `docs/decisions.md` says why it went
+  and what would bring it back (a licensed price source).
 
 ## Can do myself
 - 2026-11-04 (done the week before): added the three partners as Telegram approvers without help,
