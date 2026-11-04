@@ -15,6 +15,9 @@ What Sam has actually learned, based on evidence: a check question answered, or 
   the share count jumps without a purchase, so "bijgekocht" would be false.
 
 ## Can do myself
+- 2026-11-04 (done the week before): added the three partners as Telegram approvers without help,
+  following the steps in handover.md: removed the webhook, read the IDs with `getUpdates`,
+  registered the webhook again and set `TELEGRAM_APPROVERS`. Telegram's side checked correct.
 
 ## Shaky
 - 2026-10-26: How new data reaches prerendered pages. Knew to run the 13F ingest first, but not

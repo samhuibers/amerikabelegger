@@ -29,7 +29,7 @@ exception is `app/kaart/shell.tsx`; see "Sanctioned deviation: post cards for X"
 
 | Token | Value | Use |
 |---|---|---|
-| `--color-ink` | `#0E1B2E` | Hero, header, ticker, footer. Body text on paper. |
+| `--color-ink` | `#0E1B2E` | Hero, header, footer. Body text on paper. |
 | `--color-ink-soft` | `#24354C` | Secondary text on paper. |
 | `--color-paper` | `#F1ECDE` | The reading surface. |
 | `--color-ledger` | `#E7EBE3` | Tables, data panels, inset quotes, the disclaimer band. |
@@ -60,10 +60,9 @@ No white. No black. No gradients, no glassmorphism, no blurred shadows. No dark 
 
 ### Type
 
-Loaded via `next/font/google` in [`app/layout.tsx`](../app/layout.tsx). Two things are
+Loaded via `next/font/google` in [`app/layout.tsx`](../app/layout.tsx). One thing is
 easy to get wrong: **Bodoni Moda's `opsz` axis must be requested explicitly** (Next drops
-extra axes by default), and **IBM Plex Mono has no variable cut**, so its weights are
-mandatory.
+extra axes by default). IBM Plex Mono left with the ticker (4 November 2026).
 
 | Token | Size / leading | Face |
 |---|---|---|
@@ -80,7 +79,7 @@ The three responsive sizes clamp inside the token, so components never need brea
 size classes.
 
 Rules: Bodoni never below 24px. Sentence case everywhere, including nav and buttons —
-all-caps is for ticker symbols only. No tracked-out eyebrow labels above headings. Measure
+all-caps is for stock symbols (AAPL) only. No tracked-out eyebrow labels above headings. Measure
 62–68 characters (`max-w-reading`). `.tabular` on every table, price and figure.
 
 ### Libre Franklin stays — and what would replace it
@@ -90,7 +89,7 @@ kept**. If it is ever questioned again, the vetted substitute is **Archivo**: a 
 drawn for small sizes, with a narrower set width that buys back a line in the 256px media
 tile captions and gives the figures more spine in a table. The other two finalists were
 **Public Sans** (a redraw of Libre Franklin itself, the conservative pick) and **IBM Plex
-Sans** (pairs by design with the Plex Mono already in the ticker).
+Sans** (it paired with the ticker's Plex Mono, which is gone since November 2026).
 
 Bodoni Moda is settled and is not up for discussion. Don't introduce a face that wasn't on
 that shortlist without running a fresh specimen first.
@@ -178,9 +177,9 @@ Rules for any image that replaces these:
 
 ## Motion
 
-One orchestrated moment: the ticker. Everything else is static — no scroll animation, no
-hover lift. Hover changes colour or underline only. `prefers-reduced-motion` halts the
-ticker and leaves a readable static row.
+Nothing moves on its own. The ticker was the one orchestrated moment until it was removed on
+4 November 2026 (decisions.md). No scroll animation, no hover lift. Hover changes colour or
+underline only. If motion returns, `prefers-reduced-motion` must halt it.
 
 ## Sanctioned deviation: post cards for X
 

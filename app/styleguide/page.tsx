@@ -2,7 +2,6 @@ import { Cartouche } from "@/components/cartouche";
 import { Guilloche } from "@/components/guilloche";
 import { Masthead } from "@/components/masthead";
 import { Seal } from "@/components/seal";
-import { Ticker } from "@/components/ticker";
 import { disclaimer } from "@/lib/content";
 import { formatCurrency, formatDate, formatPercent } from "@/lib/format";
 
@@ -124,14 +123,6 @@ export default function StyleguidePage() {
               <Seal />
             </Ornament>
           </div>
-        </Section>
-
-        <Section title="Ticker">
-          <Ticker />
-          <p className="mt-4 max-w-reading text-body-s text-ink-soft">
-            De enige beweging op de site. Richting zit in het teken en het
-            driehoekje, niet in de kleur.
-          </p>
         </Section>
 
         <Section title="Artikelkaart">

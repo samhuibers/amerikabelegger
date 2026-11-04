@@ -30,11 +30,13 @@ These are `null` in `postTypes` in `lib/posts.ts`; the preview shows "nog niet b
 - [ ] **Launch Friday:** `ROTATION_START` in `lib/posts.ts` is Fri 13 Nov 2026 (likely, subject
   to change). Changing it changes who goes first.
 - [ ] **Rotation order** in `lib/posts.ts` is Claude's draft. Sam and the partners review it.
-- [ ] Wall Street gisteren and the homepage ticker: both depend on the price-data decision below.
-  Without price data, the ticker (`tickerRows`, placeholder prices) comes off before launch.
-  Wall Street gisteren also needs a US market holiday calendar.
+- [ ] Wall Street gisteren: depends on the price-data decision below, and also needs a US market
+  holiday calendar. (The homepage ticker was removed on 4 Nov; it returns only with a licensed source.)
 - [ ] Company names: extend `companyNames` in `lib/content.ts` whenever an ugly fallback name shows up (top five is covered)
-- [ ] Media gallery: a visible "voorbeeld" label
+- [ ] Media gallery: a visible "voorbeeld" label. **Risk to weigh before going public:** the eight
+  thumbnails imitate real platforms' interfaces (YouTube, TikTok, X, Instagram, Substack).
+  docs/IMAGE-CREDITS.md says that trade dress is fine for a pitch but not on a live site, and that
+  they need replacing with cleared screenshots or licensed art.
 
 ### During the first quarter season (~12–30 Nov; Kwartaalseizoen posts 17–30 Nov)
 - [ ] Sam runs `tools/13f/ingest.py` by hand every morning, reviews the diff and commits.
@@ -73,8 +75,8 @@ These are `null` in `postTypes` in `lib/posts.ts`; the preview shows "nog niet b
   set the display name and photo. Don't rename it to free the handle for a new account:
   anyone could claim @amerikabelegger in between.
 - [ ] **Price data.** Sam proposes launching without it to keep costs low (partner brief, 4 Nov).
-  If the partners agree: no Wall Street gisteren at launch, and the homepage ticker comes off
-  until there's a licensed source. Otherwise Claude compares providers whose terms allow public display.
+  If the partners agree: no Wall Street gisteren at launch (the ticker is already gone, 4 Nov).
+  Otherwise Claude compares providers whose terms allow public display.
 - [ ] Pick the newsletter service, then link it from the X bio and the site.
 - [ ] **Own domain:** the team already owns one (probably amerikabelegger.nl; Sam hasn't seen it yet).
   Confirm the name and get access to the registrar, then connect it to the Vercel project before the

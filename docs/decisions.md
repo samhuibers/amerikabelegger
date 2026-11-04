@@ -244,3 +244,8 @@ Bron: 13F over Q2 2026, ingediend bij de SEC op 14 augustus 2026.
 **Chose:** don't set X's automated-account label.
 **Instead of:** labelling the account as a bot, as the launch checklist planned.
 **Why:** every API post is approved by a person in Telegram, and the team also posts by hand, so it isn't a bot account. X's Automation rules do require the label for automated accounts ([help.x.com](https://help.x.com/en/using-x/automated-account-labels)), so revisit this if we switch to fully automatic posting.
+
+## 2026-11-04: The scrolling ticker is removed
+**Chose:** delete the price ticker above the header (`components/ticker.tsx`, the placeholder `tickerRows`, its animation) and its font, IBM Plex Mono. Git history keeps them (the last commit with them is `43218ea`).
+**Instead of:** real end-of-day prices with a date (decision of 22 Oct), or keeping the placeholder prices.
+**Why:** we probably won't pay for a price API at launch (Sam's proposal to the partners, 4 Nov), and invented prices can't go live under "De bron staat erbij". If a licensed price source comes later, the ticker can come back from git.

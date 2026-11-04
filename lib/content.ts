@@ -43,18 +43,6 @@ export const categories: {
   },
 ];
 
-/** Placeholder rows until the ticker is wired to real data. */
-export const tickerRows = [
-  { symbol: "AAPL", price: 231.4, change: 1.24 },
-  { symbol: "NVDA", price: 184.92, change: -2.13 },
-  { symbol: "MSFT", price: 512.06, change: 0.41 },
-  { symbol: "BRK.B", price: 492.18, change: 0.08 },
-  { symbol: "AMZN", price: 228.75, change: -0.62 },
-  { symbol: "GOOGL", price: 254.31, change: 1.87 },
-  { symbol: "TSLA", price: 421.09, change: -3.44 },
-  { symbol: "META", price: 738.52, change: 0.95 },
-];
-
 /** The platforms a source can post on. Drives which icon a card shows. */
 export type Platform = "X" | "YouTube" | "TikTok" | "Substack" | "Instagram";
 

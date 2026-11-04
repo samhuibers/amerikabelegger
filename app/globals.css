@@ -56,7 +56,6 @@
 @theme inline {
   --font-display: var(--font-bodoni), Georgia, "Times New Roman", serif;
   --font-sans: var(--font-franklin), "Helvetica Neue", Arial, sans-serif;
-  --font-mono: var(--font-plex-mono), ui-monospace, "SF Mono", monospace;
 }
 
 @layer base {
@@ -131,27 +130,5 @@
   .rail {
     scrollbar-width: thin;
     scrollbar-color: var(--color-brass) transparent;
-  }
-
-  /* The site's one orchestrated motion, halted below for reduced motion. */
-  .ticker-track {
-    display: flex;
-    width: max-content;
-    animation: ticker-scroll 60s linear infinite;
-  }
-}
-
-@keyframes ticker-scroll {
-  from {
-    transform: translateX(0);
-  }
-  to {
-    transform: translateX(-50%);
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .ticker-track {
-    animation: none;
   }
 }

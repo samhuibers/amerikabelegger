@@ -15,7 +15,7 @@ is structural, `--seal` is the house voice. No white, no black, no gradients.
 |---|---|---|
 | Bodoni Moda | Display, brand line, category names | Never below 24px |
 | Libre Franklin | Body, UI, nav, tables, captions | Weights 400/500/600 only |
-| IBM Plex Mono | The ticker | Nothing else |
+| IBM Plex Mono | The ticker | Nothing else (removed with the ticker, 4 Nov 2026) |
 
 ## Layout concept — the plate and its inserts
 
