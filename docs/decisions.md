@@ -208,7 +208,7 @@ Bron: 13F over Q2 2026, ingediend bij de SEC op 14 augustus 2026.
 
 ## 2026-10-27: How approval and posting work (step 4)
 **Chose:**
-- **The trigger:** one Vercel cron job at `0 12 * * 1-5` (UTC). On Hobby it fires within that hour, so the proposal arrives 13:00–15:00 in Amsterdam, summer and winter.
+- **The trigger:** one Vercel cron job at `0 12 * * 1-5` (UTC). On Hobby it fires within that hour, so the proposal arrives 13:00–13:59 in Amsterdam in winter and 14:00–14:59 in summer, before 15:00 either way.
 - **Stateless approval:** the button carries type, date and an 8-character fingerprint (SHA-256) of the post. On a tap the post is computed again and only posted if it's today's and unchanged.
 - **Never twice:** the bot removes the buttons before posting, so a second tap finds none. X also refuses identical posts.
 - **Four checks:** `CRON_SECRET`, Telegram's `secret_token` header, the group ID, and the approver list.
@@ -239,3 +239,8 @@ Bron: 13F over Q2 2026, ingediend bij de SEC op 14 augustus 2026.
 **Chose:** one muted line under the title on Giants, Growers, Moonshots, Influencers and Modelportefeuilles, written out in each page (the three category pages share one component).
 **Instead of:** a `binnenkort` option on `Masthead`, or a separate sentence per page about what is coming.
 **Why:** a flag on a shared component for something temporary is harder to remove than one line per page. A specific promise would commit to content that isn't designed yet.
+
+## 2026-11-04: No "Automated" label on @amerikabelegger
+**Chose:** don't set X's automated-account label.
+**Instead of:** labelling the account as a bot, as the launch checklist planned.
+**Why:** every API post is approved by a person in Telegram, and the team also posts by hand, so it isn't a bot account. X's Automation rules do require the label for automated accounts ([help.x.com](https://help.x.com/en/using-x/automated-account-labels)), so revisit this if we switch to fully automatic posting.

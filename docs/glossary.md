@@ -6,11 +6,11 @@ Terms that come up in this project, explained plainly.
 
 **13D / 13G.** A filing that someone has bought more than 5% of a company. It's due within days, which makes it the source for the planned alerts.
 
-**Cron job.** A task a server runs on a fixed schedule ("every weekday at 06:15"). On Vercel it calls one of our URLs at that time. It's planned as the trigger for each post.
+**Cron job.** A task a server runs on a fixed schedule ("every weekday at 06:15"). On Vercel it calls one of our URLs at that time. Ours (`vercel.json`) calls `/api/voorstel` every weekday to send the day's proposal.
 
-**Route handler.** A file in `app/` that answers a URL with data instead of a page (for example a PNG card, or "post this now"). It's how the scheduler, the cards and Telegram will talk to our code.
+**Route handler.** A file in `app/` that answers a URL with data instead of a page (for example a PNG card, or "post this now"). It's how the scheduler, the cards and Telegram talk to our code.
 
-**`ImageResponse` (`next/og`).** Built into Next.js. It turns JSX-like markup into a PNG. It's planned for the post cards, and it's the same engine as the `@vercel/og` package named in the content plan.
+**`ImageResponse` (`next/og`).** Built into Next.js. It turns JSX-like markup into a PNG. It draws the post cards, and it's the same engine as the `@vercel/og` package named in the content plan.
 
 **Webhook.** A URL of ours that another service calls when something happens. When someone taps "Plaats" in Telegram, Telegram calls our webhook, and that's when the post goes to X.
 

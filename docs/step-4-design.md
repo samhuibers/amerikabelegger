@@ -66,7 +66,7 @@ Telegram  ──POST /api/telegram (webhook)──▶  checks: secret, group, ap
 ### 1. The trigger: one Vercel cron job (`vercel.json`)
 
 - **Schedule:** `0 12 * * 1-5`. Vercel schedules run in **UTC**, and Hobby fires anywhere within
-  the hour, so the preview arrives between 13:00 and 14:59 in winter and between 14:00 and 14:59
+  the hour, so the preview arrives between 13:00 and 13:59 in winter and between 14:00 and 14:59
   in summer. That's before 15:00 in both, without daylight-saving logic.
 - The route checks `Authorization: Bearer $CRON_SECRET`, the header Vercel sends when the
   `CRON_SECRET` environment variable is set. Anyone else gets a 401.

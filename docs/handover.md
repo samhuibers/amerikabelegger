@@ -1,10 +1,10 @@
 # Handover: 13F ingest
 
-State on 24 September 2026. The work is on branch `13f-ingest` (commit `dcc8eb0`), pushed to GitHub and **not yet merged into `main`**.
+Started 24 September 2026 on branch `13f-ingest`, merged into `main` on 25 September. Later additions are dated where they appear.
 
 ## What exists now
 
-Each of the 30 topbeleggers now has their latest 13F filing (Q2 2026) stored in the repo, and pages can read it through `lib/content.ts`. The profile pages don't show the holdings yet; that's the next job.
+Each of the 30 topbeleggers now has their latest 13F filing (Q2 2026) stored in the repo, and pages can read it through `lib/content.ts`. The profile pages show the holdings (since 25 September).
 
 - **[tools/13f/ingest.py](../tools/13f/ingest.py):** pulls each investor's latest 13F-HR from SEC EDGAR into `data/13f.json`. It runs by hand, never in the Vercel build.
 - **[data/13f.json](../data/13f.json):** the output, committed. It holds 1,489 holdings across 30 investors. Git history is the archive of past quarters.
@@ -93,7 +93,7 @@ Each morning of the season:
 ## Posting to X (since step 4, 27 Oct 2026)
 
 **How it runs:**
-1. Every weekday a Vercel cron job (`vercel.json`) calls `/api/voorstel` between 12:00 and 12:59 UTC, which is 13:00–15:00 in Amsterdam.
+1. Every weekday a Vercel cron job (`vercel.json`) calls `/api/voorstel` between 12:00 and 12:59 UTC: 13:00–13:59 in Amsterdam in winter, 14:00–14:59 in summer.
 2. If there's a post today (`todaysPost` in `lib/posts.ts`), it goes to the Telegram group "Amerikabelegger beheer" as a proposal, with "Plaats" and "Overslaan" buttons.
 3. A tap calls `/api/telegram` (the webhook). "Plaats" uploads the card to X and posts it, then the Telegram message says who posted it and when, with a link.
 

@@ -1,3 +1,5 @@
+> **Concept, niet gecontroleerd.** Door een taalmodel opgesteld (stijl, horizon, samenvatting, topposities). Bron van `investors` in `lib/content.ts`; zie de TE CONTROLEREN-noot daar. De topposities hier zijn een momentopname; de site gebruikt alleen `data/13f.json`.
+
 01 — Warren Buffett
 Berkshire Hathaway
 Stijl: Quality · Value · Compounders

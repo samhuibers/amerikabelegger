@@ -45,8 +45,8 @@ into the site, and each profile page shows the portfolio.
 - **Every posting day before 15:00**, the bot sends the day's post to the Telegram group
   "Amerikabelegger beheer": card, text and two buttons, "Plaats" and "Overslaan".
 - **One tap on "Plaats" posts it on @amerikabelegger**, card included, and the message then says who
-  posted it, when, and links to the post. Only listed approvers can tap; for now that's Sam, the
-  partners follow.
+  posted it, when, and links to the post. Only listed approvers can tap: Sam and, since early
+  November, the three partners.
 - **What you approve is exactly what goes out.** If the data changes after the proposal, the tap
   is refused and a fresh proposal arrives. Yesterday's proposal can't be posted today.
 - **Nothing is stored:** no database. The post is recomputed from the data at the moment of the tap.
