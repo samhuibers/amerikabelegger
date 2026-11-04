@@ -54,4 +54,3 @@ into the site, and each profile page shows the portfolio.
 - **Cost:** X charges per post, about $0.015 each, so well under $1 a month. Posts carry no links,
   which would cost $0.20 each.
 - **Tested on the live site:** skipping, refusing an old proposal, and one real post with card
-  (29 Oct, then deleted). Still to test: two approvers tapping at the same moment.

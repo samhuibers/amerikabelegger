@@ -75,10 +75,7 @@ These are `null` in `postTypes` in `lib/posts.ts`; the preview shows "nog niet b
 - [ ] Pick the newsletter service.
 
 ### Open questions
-- [ ] `package.json`: `next` moved from the exact `16.3.4` to `^16.4.3` (uncommitted, made outside our sessions).
-  Decide whether to keep the caret, and bump `eslint-config-next` to match.
 - [ ] Profile pages still show names as filed ("COCA COLA CO"). Switch them to `companyName()`?
-- [ ] Moonshot tagline "Enorme potentie" reads as advice. Replace it with something neutral.
 
 ## Before the site and the X account go public (together, ~16 Nov)
 - [ ] **TE CONTROLEREN** in `lib/content.ts` (Sam does this): investor style, horizon and

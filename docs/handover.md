@@ -77,7 +77,10 @@ Each morning of the season:
 
 1. ~~**Merge `13f-ingest` into `main`.**~~ Done 25 September 2026 (fast-forward).
 2. ~~**Profile-page design pass.**~~ Done 25 September 2026. Sam picked the strip with a two-column ledger below it from three rendered treatments. The choice is recorded in the `Portfolio` doc comment.
-3. **Readable company names.** SEC's names are raw ("COCA COLA CO", "STATE STR SPDR S&P 500 ETF"). The proper fix is the company table that the Giants, Growers and Moonshots categories will need anyway.
+3. **Readable company names.** Partly done. SEC's names are raw ("COCA COLA CO", "STATE STR SPDR S&P 500 ETF").
+   - **Done:** `companyName()` in `lib/content.ts` cleans the name automatically (`cleanIssuer`) and uses the hand-kept `companyNames` list, keyed by ticker, where that falls short. The post cards and the Telegram proposals use it (via `topPositions`). Decision of 22 Oct 2026 in `docs/decisions.md`.
+   - **Still open:** the profile page ([app/topbeleggers/[slug]/page.tsx](../app/topbeleggers/[slug]/page.tsx)) still shows the raw `holding.issuer`, so it needs `companyName()` too.
+   - **Still open:** the real company table for Giants, Growers and Moonshots. `companyNames` is only the seed for it, and nothing else exists yet.
 4. **The TE CONTROLEREN note in `lib/content.ts`** still stands. Style, horizon and summaries need a source before publication. Also check whether Mandel (Lone Pine) still counts as active.
 
 ## Known limits and gotchas
