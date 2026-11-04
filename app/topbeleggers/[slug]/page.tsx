@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { Masthead } from "@/components/masthead";
 import {
+  companyName,
   getPortfolio,
   investors,
   portfolioPeriod,
@@ -224,7 +225,7 @@ function Strip({ stocks }: { stocks: Ranked[] }) {
         {top.map((s) => (
           <div
             key={s.cusip}
-            title={`${s.issuer}, ${formatWeight(s.weight)}`}
+            title={`${companyName(s)}, ${formatWeight(s.weight)}`}
             style={{ flexBasis: `${s.weight}%` }}
             className="flex min-w-0 items-end overflow-hidden pb-2 pl-2 text-micro font-medium whitespace-nowrap text-paper odd:bg-ink even:bg-ink-soft"
           >
@@ -413,13 +414,13 @@ function OptionsAndBonds({ rows, hasOptions }: { rows: Holding[]; hasOptions: bo
 }
 
 /*
- * Naam zoals ingediend, met de ticker erachter — op een telefoon eronder.
+ * Leesbare naam (`companyName`), met de ticker erachter — op een telefoon eronder.
  * Geen ticker bekend: alleen de naam, nooit een geraden ticker.
  */
 function Name({ holding }: { holding: Holding }) {
   return (
     <>
-      <span className="[overflow-wrap:anywhere]">{holding.issuer}</span>
+      <span className="[overflow-wrap:anywhere]">{companyName(holding)}</span>
       {holding.ticker && (
         <span className="block font-medium whitespace-nowrap text-ink-soft md:ml-2 md:inline">
           {holding.ticker}

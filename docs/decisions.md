@@ -219,3 +219,8 @@ Bron: 13F over Q2 2026, ingediend bij de SEC op 14 augustus 2026.
 - `@xdevplatform/xdk` (no documented media upload) or `twitter-api-v2` (uploads through the older v1.1 endpoint);
 - Vercel Pro for exact timing.
 **Why:** no database, nothing that can drift between preview and post, and every line is readable.
+
+## 2026-11-04: Profile pages show readable company names
+**Chose:** the holdings strip and ledger on `/topbeleggers/[slug]` use `companyName()`, like the cards and Telegram proposals. The ticker stays beside each name.
+**Instead of:** the name as filed ("COCA COLA CO"), which the profile page showed since September.
+**Why:** one name per company across the site. Share classes still get their own row (GOOGL and GOOG both read "Alphabet", told apart by the ticker); only the cards merge them.

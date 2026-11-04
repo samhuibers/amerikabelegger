@@ -199,7 +199,7 @@ export type Holding = {
  * - Vorm (gekozen uit drie gerenderde varianten, september 2026): eerst een
  *   strook — de hele aandelenportefeuille als één band, de tien grootste als
  *   segmenten en de rest als één blok. Daaronder die tien in een grootboek van
- *   twee kolommen; de rest achter "Toon de overige". Namen zoals ingediend.
+ *   twee kolommen; de rest achter "Toon de overige". Namen via `companyName`.
  * - Daaronder "Opties en obligaties". Converteerbare obligaties met hun
  *   marktwaarde. Opties als "Put (daalt-positie)" of "Call" met de waarde van
  *   het onderliggende aandeel en nooit een gewicht: die waarde is niet wat er
@@ -280,8 +280,9 @@ export function portfolioPeriod(portfolio: Portfolio) {
  * worden daarop samengevoegd in `topPositions`.
  *
  * Gevuld met elke ticker die in iemands top vijf staat. Een naam die hier
- * ontbreekt valt terug op `cleanIssuer`; wie in Telegram een lelijke naam ziet,
- * voegt hem hier toe. Dit wordt later de bedrijventabel van de categorieën.
+ * ontbreekt valt terug op `cleanIssuer`; wie in Telegram of op een profielpagina
+ * een lelijke naam ziet, voegt hem hier toe. Dit wordt later de
+ * bedrijventabel van de categorieën.
  */
 const companyNames: Record<string, string> = {
   AAL: "American Airlines",
